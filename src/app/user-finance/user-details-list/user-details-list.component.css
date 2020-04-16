@@ -1,0 +1,35 @@
+mat-spinner {
+  margin: auto;
+}
+
+.card {
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 8px;
+  margin: 15px 5px;
+  position: relative;
+  /* justify-content: center;
+    align-items: center;
+    background: rgb(14, 167, 194); */
+}
+.buttonHeader {
+  margin: 0px 8px;
+}
+.adduser {
+  border-radius: 20px !important;
+}
+
+.example-header-image {
+  /* background-image: url("/assets/img/defaultImage.png"); */
+  background-image: url("/images/nish-jpeg-2020-04-16T09-43-11.554Z.jpg");
+
+  
+  background-size: cover;
+}
+
+.rightArrow {
+  /* justify-content: flex-end; */
+  margin: auto;
+}

@@ -1,0 +1,92 @@
+<div id="login">
+  <div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+      <div id="login-column" class="col-md-6">
+        <div id="login-box" class="col-md-12">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            *ngIf="showSuccessMsg"
+            role="alert"
+          >
+            {{ loginMsg }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div
+            class="alert alert-warning alert-dismissible fade show"
+            *ngIf="showErrorMsg"
+            role="alert"
+          >
+            {{ loginMsg }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <mat-card>
+            <mat-card-header class="text-center">
+              <mat-card-title >Login</mat-card-title>
+            </mat-card-header>
+            <mat-spinner *ngIf="isLoading"></mat-spinner>
+            <form
+              (ngSubmit)="onLogin(loginForm)"
+              #loginForm="ngForm"
+              *ngIf="!isLoading"
+            >
+              <div class="form-group">
+                <mat-form-field>
+                  <input
+                    class="form-control"
+                    matInput
+                    placeholder="E-Mail"
+                    name="email"
+                    #emailInput
+                    ngModel
+                    required
+                    email
+                  />
+                  <mat-error *ngIf="emailInput.invalid"
+                    >Please enter a valid email</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="form-group">
+                <mat-form-field>
+                  <input
+                    class="form-control"
+                    matInput
+                    type="password"
+                    placeholder="Password"
+                    #password
+                    ngModel
+                    required
+                    name="password"
+                  />
+                  <mat-error *ngIf="password.invalid"
+                    >Please enter a valid password</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="form-group">
+                <button mat-raised-button *ngIf="!isLoading" type="submit" color="accent">
+                  Login
+                </button>
+              </div>
+            </form>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

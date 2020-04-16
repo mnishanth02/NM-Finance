@@ -1,0 +1,93 @@
+<div id="signup">
+  <div class="container">
+    <div id="signup-row" class="row justify-content-center align-items-center">
+      <div id="signup-column" class="col-md-6">
+        <div id="signup-box" class="col-md-12">
+          <mat-spinner *ngIf="isLoading"></mat-spinner>
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            *ngIf="showSuccessMsg"
+            role="alert"
+          >
+            {{ signUpMsg }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div
+            class="alert alert-warning alert-dismissible fade show"
+            *ngIf="showErrorMsg"
+            role="alert"
+          >
+            {{ signUpMsg }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <mat-card>
+            <mat-card-header class="text-center">
+              <mat-card-title>Sign Up</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <form
+                (ngSubmit)="onSignup(signupForm)"
+                #signupForm="ngForm"
+                *ngIf="!isLoading"
+              >
+                <div class="form-group">
+                  <mat-form-field>
+                    <input
+                      class="form-control"
+                      matInput
+                      placeholder="E-Mail"
+                      name="email"
+                      #emailInput
+                      ngModel
+                      required
+                      email
+                    />
+                    <mat-error *ngIf="emailInput.invalid"
+                      >Please enter a valid email</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <mat-form-field>
+                    <input
+                      class="form-control"
+                      matInput
+                      type="password"
+                      placeholder="Password"
+                      #password
+                      ngModel
+                      required
+                      name="password"
+                    />
+                    <mat-error *ngIf="password.invalid"
+                      >Please enter a valid password</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <button mat-raised-button type="submit" *ngIf="!isLoading" color="accent">
+                    Sign up
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<div *ngIf="!isLoading">
+  <div [@userListAnimation]="userLists.length">
+    <div class="row">
+      <div class="col">
+        <div class="buttonHeader">
+          <a
+            [routerLink]="['addUser']"
+            *ngIf="userIsAuthenticated"
+            routerLinkActive="active"
+            ><button
+              mat-raised-button
+              color="accent"
+              class="float-right adduser"
+            >
+              Add User
+            </button></a
+          >
+        </div>
+      </div>
+    </div>
+
+    <mat-card *ngFor="let userList of userLists" class="card">
+      <mat-card-header>
+
+        <!-- <div mat-card-avatar class="example-header-image" ></div> -->
+        <div class="post-image">
+          <img
+            [src]="userList.userProfilePic"
+            name="image"
+            [alt]=""
+          />
+        </div>
+        <!-- <div mat-card-avatar [ngStyle]="{ 'background-image': 'url(' + http://localhost:3000/images/nish-jpeg-2020-04-16T09-43-11.554Z.jpg + ')'}" ></div> -->
+        <mat-card-title
+          >{{ userList.prefix }}. {{ userList.lastName }},
+          {{ userList.firstName }}</mat-card-title
+        >
+        <mat-card-subtitle> {{ userList.email }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-10">
+            <p>
+              {{ userList.dob }}
+            </p>
+            <p>
+              {{ userList.gender }}
+            </p>
+            <p>
+              {{ userList.martialStatus }}
+            </p>
+          </div>
+          <div class="col-md-2">
+            <div class="actionButtons" *ngIf="userIsAuthenticated">
+              <div class="row">
+                <div class="col-md-11 form-group">
+                  <a
+                    [routerLink]="['loanDetails', userList.id]"
+                    routerLinkActive="active"
+                  >
+                    <button mat-raised-button class="float-right">
+                      View Details
+                      <span class="material-icons">
+                        keyboard_arrow_right
+                      </span>
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

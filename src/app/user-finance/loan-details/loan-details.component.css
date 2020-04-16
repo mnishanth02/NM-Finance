@@ -1,0 +1,82 @@
+.card2 {
+    max-width: 1275px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 8px;
+    margin: 15px 5px;
+    position: relative;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* background: rgb(14, 167, 194); */
+  }
+  
+  .example-header-image {
+    background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
+    background-size: cover;
+  }
+  
+  mat-form-field,
+  textarea {
+    width: 100%;
+  }
+  
+  mat-spinner {
+    margin: auto;
+  }
+  
+  #signup .container #signup-row #signup-column #signup-box {
+    margin-top: 120px;
+    max-width: 700px;
+  }
+  #signup .container #signup-row #signup-column #signup-box #signup-form {
+    padding: 20px;
+  }
+  
+  mat-form-field,
+  textarea {
+    width: 100%;
+  }
+  
+  mat-spinner {
+    margin: auto;
+  }
+  
+  mat-card-header {
+    display: block;
+  }
+  
+  .saveButtonGroup {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .alignSelectOption {
+    margin-top: 18px;
+  }
+  
+  .separator {
+    display: flex;
+    align-items: center;
+    text-align:  center;
+    margin: 15px 0px;
+  }
+  .separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px solid #673ab7;
+  }
+  .separator::before {
+    margin-right: .25em;
+  }
+  .separator::after {
+    margin-left: .25em;
+  }
+  
+  .buttonHeader {
+    margin: 0px 8px;
+  }
+  
+  .goBack {
+    border-radius: 20px !important;
+  }

@@ -1,0 +1,147 @@
+.card {
+  max-width: 1275px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 8px;
+  margin: 15px 5px;
+  position: relative;
+}
+
+.card2 {
+  max-width: 1275px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+    0 3px 1 /*  */ 0px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 8px;
+  margin: 15px 5px;
+  position: relative;
+}
+
+.example-header-image {
+  background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
+  background-size: cover;
+}
+
+.image-preview {
+  text-align: center;
+  margin: 1rem auto;
+  position: relative;
+}
+
+.image-preview > img {
+  max-width: 510px;
+  max-height: 250px;
+}
+
+mat-form-field,
+textarea {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+#signup .container #signup-row #signup-column #signup-box {
+  margin-top: 120px;
+  max-width: 700px;
+}
+#signup .container #signup-row #signup-column #signup-box #signup-form {
+  padding: 20px;
+}
+
+mat-form-field,
+textarea {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+mat-card-header {
+  display: block;
+}
+
+.saveButtonGroup {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.saveButtonGroup > button {
+  margin-left: 15px;
+  min-width: 120px;
+}
+
+.alignSelectOption {
+  margin-top: 18px;
+}
+
+.mat-card > :first-child.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0px 20px 0px;
+  font-size: x-large;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0px 20px 0px;
+  font-size: x-large;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px solid #673ab7;
+}
+.separator::before {
+  margin-right: 0.25em;
+}
+.separator::after {
+  margin-left: 0.25em;
+}
+
+.buttonHeader {
+  margin: 0px 8px;
+}
+
+.goBack {
+  border-radius: 20px !important;
+}
+
+/* Slider css START */
+
+.mat-slider.mat-slider-horizontal .mat-slider-wrapper {
+  top: 18px !important;
+}
+.mat-slider.mat-slider-horizontal .mat-slider-track-wrapper {
+  height: 12px !important;
+  border-radius: 10px !important;
+}
+.mat-slider.mat-slider-horizontal .mat-slider-track-background,
+.mat-slider.mat-slider-horizontal .mat-slider-track-fill {
+  height: 100% !important;
+}
+.mat-slider.mat-slider-horizontal .mat-slider-track-fill {
+  background-color: blue !important;
+}
+.mat-accent .mat-slider-thumb {
+  height: 30px !important;
+  width: 30px !important;
+  background-color: white !important;
+  border: solid 2px gray !important;
+  bottom: -20px !important;
+  right: -20px !important;
+}
+.mat-slider-min-value:not(.mat-slider-thumb-label-showing) .mat-slider-thumb {
+  background-color: white !important;
+}
+
+/* Slider css END */

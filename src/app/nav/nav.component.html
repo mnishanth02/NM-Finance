@@ -1,0 +1,121 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'push' : 'over'"
+  >
+    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        *ngIf="userIsAuthenticated"
+        [routerLink]="['/dashboard']"
+        (click)="drawer.toggle()"
+        routerLinkActive="active"
+        >Dashboard</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="['/userFinance']"
+        (click)="drawer.toggle()"
+        routerLinkActive="active"
+      >
+        User Finance
+      </a>
+      <a
+        mat-list-item
+        *ngIf="!userIsAuthenticated"
+        [routerLink]="['/login']"
+        (click)="drawer.toggle()"
+        routerLinkActive="active"
+        >Login</a
+      >
+      <a
+        mat-list-item
+        *ngIf="!userIsAuthenticated"
+        [routerLink]="['/signup']"
+        (click)="drawer.toggle()"
+        routerLinkActive="active"
+        >SignUp</a
+      >
+      <a
+        mat-list-item
+        *ngIf="userIsAuthenticated"
+        (click)="[drawer.toggle(), onLogout()]"
+        >Logout</a
+      >
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async"
+        >
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+
+        <span>NM Finance</span>
+        <span class="spacer"></span>
+        <!-- <mat-icon class="icon" aria-hidden="false" aria-label="Example heart icon">Login</mat-icon>
+          <mat-icon class="icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon> -->
+        <div *ngIf="!(isHandset$ | async)">
+          <button
+            class="icon"
+            *ngIf="userIsAuthenticated"
+            [routerLink]="['/dashboard']"
+            routerLinkActive="active"
+            mat-button
+          >
+            Dashboard
+          </button>
+          <button
+            class="icon"
+            [routerLink]="['/userFinance']"
+            routerLinkActive="active"
+            mat-button
+          >
+            User Finance
+          </button>
+          <button
+            class="icon"
+            *ngIf="!userIsAuthenticated"
+            [routerLink]="['/login']"
+            routerLinkActive="active"
+            mat-button
+          >
+            Login
+          </button>
+          <button
+            class="icon"
+            *ngIf="!userIsAuthenticated"
+            [routerLink]="['/signup']"
+            routerLinkActive="active"
+            mat-button
+          >
+            Signup
+          </button>
+          <button
+          class="icon"
+          *ngIf="userIsAuthenticated"
+          (click)="onLogout()"
+          mat-button
+        >
+          Logout
+        </button>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <!-- Add Content Here -->
+    <div class="container-fluid">
+      <app-landing-page></app-landing-page>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

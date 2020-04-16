@@ -1,0 +1,134 @@
+<div
+  class="alert alert-success alert-dismissible fade show"
+  *ngIf="showSuccessMsg"
+  role="alert"
+>
+  {{ statusMsg }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div
+  class="alert alert-warning alert-dismissible fade show"
+  *ngIf="showErrorMsg"
+  role="alert"
+>
+  {{ statusMsg }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="buttonHeader">
+      <a [routerLink]="['/userFinance']" routerLinkActive="active"
+        ><button mat-raised-button class="float-right goBack">
+          <span class="material-icons">
+            keyboard_arrow_left
+          </span>
+          Back
+        </button></a
+      >
+    </div>
+  </div>
+</div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-card class="card2" *ngIf="isDataAvailable && !isLoading">
+  <mat-card-header>
+    <div class="row">
+      <div class="col-md-11">
+        <mat-card-title>Loan Details</mat-card-title>
+        <mat-card-subtitle
+          >{{ currentUserData.firstName }}
+          {{ currentUserData.lastName }}</mat-card-subtitle
+        >
+      </div>
+      <div class="col-md-1">
+        <button mat-raised-button color="warn" (click)="onDelete()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-card>
+      <form
+        #addUserForm="ngForm"
+        *ngIf="!isLoading"
+      >
+        <div class="separator">Basic Details</div>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-2 my-1">
+              <div class="form-group" class="alignSelectOption">
+                <mat-form-field>
+                  <input
+                    class="form-control"
+                    matInput
+                    placeholder="First Name"
+                    name="firstName"
+                    #firstName
+                    ngModel
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-4 my-1">
+              <div class="form-group">
+                <mat-form-field>
+                  <input
+                    class="form-control"
+                    matInput
+                    placeholder="First Name"
+                    name="firstName"
+                    #firstName
+                    ngModel
+                    required
+                  />
+                  <mat-error *ngIf="firstName.invalid"
+                    >Please enter a First Name</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-6 my-1">
+              <div class="form-group">
+                <mat-form-field>
+                  <input
+                    class="form-control"
+                    matInput
+                    placeholder="Last Name"
+                    name="lastName"
+                    #lastName
+                    ngModel
+                    required
+                  />
+                  <mat-error *ngIf="lastName.invalid"
+                    >Please enter a Last Name</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="form-group saveButtonGroup">
+            <button
+              mat-raised-button
+              type="button"
+              (click)="addUserForm.resetForm()"
+              color="accent"
+            >
+              Reset
+            </button>
+            <button mat-raised-button type="submit" color="primary">
+              Save
+            </button>
+          </div>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </mat-card-content>
+</mat-card>
