@@ -122,7 +122,7 @@ exports.updateUser = (req, res, next) => {
   )
     .then((result) => {
       console.log("reslultUpdate- >" + result);
-      if (result.nModified > 0) {
+      if (result.n > 0) {
         res.status(200).json({ message: "success", result: result });
       } else {
         res.status(401).json({ message: "error", result: result });

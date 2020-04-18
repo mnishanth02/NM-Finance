@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
       // JSON web token
       const token = jwt.sign(
         { email: fetchedUser.email, userId: fetchedUser._id },
-        "NM_Finance_secret_password",
+        process.env.JWT_KEY,
         { expiresIn: "1h" }
       );
       res.status(200).json({

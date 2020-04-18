@@ -1,0 +1,6 @@
+{
+  "env": {
+    "MONGO_ATLAS_PW": "adminpassword",
+    "JWT_KEY": "NM_Finance_secret_password"
+  }
+}

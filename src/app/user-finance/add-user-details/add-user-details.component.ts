@@ -45,7 +45,9 @@ export class AddUserDetailsComponent implements OnInit {
         this.currentUserDBId = null;
       }
     });
-
+    this.userFinanceService.getUserByIdObservable().subscribe((result) => {
+      this.currentUserData = result.userData;
+    });
     this.addUserSub = this.userFinanceService
       .getNewUserDataSub()
       .subscribe((data) => {

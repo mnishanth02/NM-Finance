@@ -1,5 +1,5 @@
 const path = require("path");
-var cors = require('cors');
+var cors = require("cors");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -9,8 +9,10 @@ const userRoutes = require("./routes/user");
 
 mongoose.set("debug", true);
 
-const url = "mongodb+srv://admin:adminpassword@clusternmfinance-pvdal.mongodb.net/nm-finance?retryWrites=true&w=majority";
-
+const url =
+  "mongodb+srv://admin:" +
+  process.env.MONGO_ATLAS_PW +
+  "@clusternmfinance-pvdal.mongodb.net/nm-finance?retryWrites=true&w=majority";
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -18,8 +20,7 @@ mongoose
     console.log("Connected Success");
   })
   .catch((err) => {
-
-    console.log("Connected failed->"+ err);
+    console.log("Connected failed->" + err);
   });
 
 const app = express();
@@ -41,18 +42,18 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, DELETE, PUT, OPTIONS"
   );
- // res.setHeader("Content-Type", "multipart/form-data");
+  // res.setHeader("Content-Type", "multipart/form-data");
   //res.setHeader("Accept", "application/json");
 
   res.set({
     "Content-Type": "multipart/form-data",
-    "Accept": "application/json"
+    Accept: "application/json",
   });
 
+  
   next();
 });
 
 //app.use("/api/posts", postsRoutes);
 app.use("/api/user", userRoutes);
-app.listen(3000);
 module.exports = app;

@@ -3,13 +3,15 @@ import { UserData } from "./add-user-details/userData.model";
 import { HttpClient } from "@angular/common/http";
 import { Subject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { error } from '@angular/compiler/src/util';
+import { environment } from '../../environments/environment';
 
+const BACKEND_URL = environment.apiUrl+"/user/";
 @Injectable({
   providedIn: "root",
 })
 export class UserFinanceService {
   private allUserDataList: UserData[] = [];
+  private currentUserData: UserData;
   private addUserSubject = new Subject<{
     status: string;
     message: string;
@@ -18,6 +20,8 @@ export class UserFinanceService {
     userList: UserData[];
     userListCount: number;
   }>();
+
+  private userByIdSub = new Subject<{ userData: UserData }>();
 
   navigationLoadingSub = new Subject<boolean>();
 
@@ -28,7 +32,7 @@ export class UserFinanceService {
 
     this.http
       .post<{ message: string; result: any }>(
-        "http://localhost:3000/api/user/addNewUser",
+        BACKEND_URL + "addNewUser",
         userData
       )
       .subscribe(
@@ -55,30 +59,42 @@ export class UserFinanceService {
   }
 
   updateNewUser(userDataTemp: UserData) {
-
     const userData = this.popuplateFormDate(userDataTemp);
 
-    this.http.put<{message: string}>("http://localhost:3000/api/user/updateUser/"+ userDataTemp.id, userData).subscribe(
-      (response) => {
-        if (response.message === "success") {
-          this.addUserSubject.next({
-            status: "success",
-            message: "User Modified Successfully",
-          });
-        } else {
+    this.http
+      .put<{ message: string }>(
+        BACKEND_URL + "updateUser/" + userDataTemp.id,
+        userData
+      )
+      .subscribe(
+        (response) => {
+          if (response.message === "success") {
+            this.getUserById(userDataTemp.id).subscribe((result) => {
+              this.currentUserData = result;
+              this.userByIdSub.next({ userData: this.currentUserData });
+            });
+            this.addUserSubject.next({
+              status: "success",
+              message: "User Modified Successfully",
+            });
+          } else {
+            this.addUserSubject.next({
+              status: "error",
+              message: "Error! Try after sometime",
+            });
+          }
+        },
+        (error) => {
           this.addUserSubject.next({
             status: "error",
             message: "Error! Try after sometime",
           });
         }
-      },
-      (error) => {
-        this.addUserSubject.next({
-          status: "error",
-          message: "Error! Try after sometime",
-        });
-      }
-    );
+      );
+  }
+
+  getUserByIdObservable() {
+    return this.userByIdSub.asObservable();
   }
   getNewUserDataSub() {
     return this.addUserSubject.asObservable();
@@ -87,7 +103,7 @@ export class UserFinanceService {
   getAllUserList() {
     this.http
       .get<{ message: string; userList: any; count: number }>(
-        "http://localhost:3000/api/user/getAllUser"
+        BACKEND_URL + "getAllUser"
       )
       .pipe(
         map((list) => {
@@ -159,11 +175,10 @@ export class UserFinanceService {
       term: number;
       loanStartDate: string;
       userProfilePic: File | string;
-    }>("http://localhost:3000/api/user/getUserById/" + id);
+    }>(BACKEND_URL + "getUserById/" + id);
   }
 
   private popuplateFormDate(data: UserData) {
-    
     const userData = new FormData();
     userData.append("prefix", data.prefix);
     userData.append("firstName", data.firstName);
@@ -183,13 +198,16 @@ export class UserFinanceService {
     userData.append("loanAmount", data.loanAmount.toString());
     userData.append("intrestRate", data.intrestRate.toString());
     userData.append("term", data.term.toString());
-    userData.append("loanStartDate", new Date(data.loanStartDate).toISOString());
+    userData.append(
+      "loanStartDate",
+      new Date(data.loanStartDate).toISOString()
+    );
     userData.append("userProfilePic", data.userProfilePic);
-    
+
     return userData;
   }
 
   onDeleteUser(id: string) {
-    return this.http.delete("http://localhost:3000/api/user/deleteUser/" + id);
+    return this.http.delete(BACKEND_URL + "deleteUser/" + id);
   }
 }

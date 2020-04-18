@@ -27,7 +27,7 @@
       <a
         mat-list-item
         *ngIf="!userIsAuthenticated"
-        [routerLink]="['/login']"
+        [routerLink]="['/auth/login']"
         (click)="drawer.toggle()"
         routerLinkActive="active"
         >Login</a
@@ -35,7 +35,7 @@
       <a
         mat-list-item
         *ngIf="!userIsAuthenticated"
-        [routerLink]="['/signup']"
+        [routerLink]="['/auth/signup']"
         (click)="drawer.toggle()"
         routerLinkActive="active"
         >SignUp</a
@@ -86,7 +86,7 @@
           <button
             class="icon"
             *ngIf="!userIsAuthenticated"
-            [routerLink]="['/login']"
+            [routerLink]="['/auth/login']"
             routerLinkActive="active"
             mat-button
           >
@@ -95,7 +95,7 @@
           <button
             class="icon"
             *ngIf="!userIsAuthenticated"
-            [routerLink]="['/signup']"
+            [routerLink]="['/auth/signup']"
             routerLinkActive="active"
             mat-button
           >

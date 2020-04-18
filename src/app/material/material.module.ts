@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 
 import { LayoutModule } from "@angular/cdk/layout";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -42,7 +41,6 @@ const MaterialComponents = [
   MatCardModule,
   MatMenuModule,
   MatSliderModule,
-  SliderModule,
   MatDialogModule
 ];
 
