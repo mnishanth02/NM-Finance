@@ -16,8 +16,10 @@ import { UserFinanceComponent } from "./user-finance/user-finance.component";
 import { UserDetailsListComponent } from "./user-finance/user-details-list/user-details-list.component";
 import { AddUserDetailsComponent } from "./user-finance/add-user-details/add-user-details.component";
 import { LoanDetailsComponent } from "./user-finance/loan-details/loan-details.component";
-import { LoanDetailsResolver } from "./user-finance/loan-details/loan-details-resolver.service";
 import { AuthInterceptor } from "./auth/auth-interceptor";
+import { ErrorInterceptor } from "./error-interceptor";
+import { ErrorComponent } from "./error/error.component";
+import { UserDataResolve } from './user-finance/add-user-details/User-Data-resolver.service';
 
 @NgModule({
   declarations: [
@@ -42,9 +44,11 @@ import { AuthInterceptor } from "./auth/auth-interceptor";
     FormsModule,
   ],
   providers: [
-    LoanDetailsResolver,
+    UserDataResolve,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent],
 })
 export class AppModule {}

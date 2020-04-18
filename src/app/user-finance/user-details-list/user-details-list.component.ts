@@ -49,15 +49,13 @@ import { AuthService } from "src/app/auth/auth.service";
   ],
 })
 export class UserDetailsListComponent implements OnInit, OnDestroy {
-  // links: Array<string> = [];
   userLists: UserData[] = [];
   private userSub: Subscription;
   userDataListTotalCount = 0;
   isLoading = false;
+  userId: string;
   private authStatusSubs: Subscription;
   userIsAuthenticated = false;
-  image = "/assets/img/defaultImage.png"
-  
 
   constructor(
     private router: Router,
@@ -74,6 +72,7 @@ export class UserDetailsListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+    this.userId = this.authService.getUserId();
     this.isLoading = true;
     this.userFinService.getAllUserList();
     this.userSub = this.userFinService.getAllUserListSub().subscribe((data) => {
@@ -87,6 +86,7 @@ export class UserDetailsListComponent implements OnInit, OnDestroy {
       .getAuthStatusListener()
       .subscribe((isAuthenticated) => {
         this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
       });
   }
 

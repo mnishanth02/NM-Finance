@@ -3,6 +3,7 @@ import { UserData } from "./add-user-details/userData.model";
 import { HttpClient } from "@angular/common/http";
 import { Subject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { error } from '@angular/compiler/src/util';
 
 @Injectable({
   providedIn: "root",
@@ -23,28 +24,7 @@ export class UserFinanceService {
   constructor(private http: HttpClient) {}
 
   addNewUser(userDataTemp: UserData) {
-    const userData = new FormData();
-    userData.append("prefix", userDataTemp.prefix);
-    userData.append("firstName", userDataTemp.firstName);
-    userData.append("lastName", userDataTemp.lastName);
-    userData.append("email", userDataTemp.email);
-    userData.append("areaCode", userDataTemp.areaCode);
-    userData.append("gender", userDataTemp.gender);
-    userData.append("martialStatus", userDataTemp.martialStatus);
-    userData.append("addresLine1", userDataTemp.addresLine1);
-    userData.append("addresLine2", userDataTemp.addresLine2);
-    userData.append("dob", userDataTemp.dob);
-    userData.append("mobileNumber", userDataTemp.mobileNumber.toString());
-    userData.append("city", userDataTemp.city);
-    userData.append("state", userDataTemp.state);
-    userData.append("zip", userDataTemp.zip.toString());
-    userData.append("country", userDataTemp.country);
-    userData.append("loanAmount", userDataTemp.loanAmount.toString());
-    userData.append("intrestRate", userDataTemp.intrestRate.toString());
-    userData.append("term", userDataTemp.term.toString());
-    userData.append("loanStartDate", userDataTemp.loanStartDate);
-
-    userData.append("userProfilePic", userDataTemp.userProfilePic);
+    const userData = this.popuplateFormDate(userDataTemp);
 
     this.http
       .post<{ message: string; result: any }>(
@@ -73,6 +53,33 @@ export class UserFinanceService {
         }
       );
   }
+
+  updateNewUser(userDataTemp: UserData) {
+
+    const userData = this.popuplateFormDate(userDataTemp);
+
+    this.http.put<{message: string}>("http://localhost:3000/api/user/updateUser/"+ userDataTemp.id, userData).subscribe(
+      (response) => {
+        if (response.message === "success") {
+          this.addUserSubject.next({
+            status: "success",
+            message: "User Modified Successfully",
+          });
+        } else {
+          this.addUserSubject.next({
+            status: "error",
+            message: "Error! Try after sometime",
+          });
+        }
+      },
+      (error) => {
+        this.addUserSubject.next({
+          status: "error",
+          message: "Error! Try after sometime",
+        });
+      }
+    );
+  }
   getNewUserDataSub() {
     return this.addUserSubject.asObservable();
   }
@@ -97,14 +104,18 @@ export class UserFinanceService {
                 dob: userList.dob,
                 gender: userList.gender,
                 martialStatus: userList.martialStatus,
-                addresLine1: userList.addresLine1,
-                addresLine2: userList.addresLine2,
+                addressLine1: userList.addressLine1,
+                addressLine2: userList.addressLine2,
                 city: userList.city,
                 state: userList.state,
                 zip: userList.zip,
                 country: userList.country,
+                loanAmount: userList.loanAmount,
+                intrestRate: userList.intrestRate,
+                term: userList.term,
+                loanStartDate: userList.loanStartDate,
                 creator: userList.creator,
-                userProfilePic: userList.imagePath
+                userProfilePic: userList.imagePath,
               };
             }),
             userListCount: list.count,
@@ -136,13 +147,46 @@ export class UserFinanceService {
       dob: string;
       gender: string;
       martialStatus: string;
-      addresLine1: string;
-      addresLine2: string;
+      addressLine1: string;
+      addressLine2: string;
       city: string;
       state: string;
       zip: number;
       country: string;
+      creator: string;
+      loanAmount: number;
+      intrestRate: number;
+      term: number;
+      loanStartDate: string;
+      userProfilePic: File | string;
     }>("http://localhost:3000/api/user/getUserById/" + id);
+  }
+
+  private popuplateFormDate(data: UserData) {
+    
+    const userData = new FormData();
+    userData.append("prefix", data.prefix);
+    userData.append("firstName", data.firstName);
+    userData.append("lastName", data.lastName);
+    userData.append("email", data.email);
+    userData.append("areaCode", data.areaCode);
+    userData.append("gender", data.gender);
+    userData.append("martialStatus", data.martialStatus);
+    userData.append("addressLine1", data.addressLine1);
+    userData.append("addressLine2", data.addressLine2);
+    userData.append("dob", new Date(data.dob).toISOString());
+    userData.append("mobileNumber", data.mobileNumber.toString());
+    userData.append("city", data.city);
+    userData.append("state", data.state);
+    userData.append("zip", data.zip.toString());
+    userData.append("country", data.country);
+    userData.append("loanAmount", data.loanAmount.toString());
+    userData.append("intrestRate", data.intrestRate.toString());
+    userData.append("term", data.term.toString());
+    userData.append("loanStartDate", new Date(data.loanStartDate).toISOString());
+    userData.append("userProfilePic", data.userProfilePic);
+    
+    return userData;
   }
 
   onDeleteUser(id: string) {

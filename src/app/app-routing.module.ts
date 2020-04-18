@@ -7,8 +7,8 @@ import { UserFinanceComponent } from "./user-finance/user-finance.component";
 import { UserDetailsListComponent } from './user-finance/user-details-list/user-details-list.component';
 import { AddUserDetailsComponent } from './user-finance/add-user-details/add-user-details.component';
 import { LoanDetailsComponent } from './user-finance/loan-details/loan-details.component';
-import { LoanDetailsResolver } from './user-finance/loan-details/loan-details-resolver.service';
 import { AuthGuard } from './auth/auth-guard';
+import { UserDataResolve } from './user-finance/add-user-details/User-Data-resolver.service';
 
 const routes: Routes = [
   { path: "", redirectTo: "dashboard", pathMatch: "full", canActivate: [AuthGuard] },
@@ -24,9 +24,15 @@ const routes: Routes = [
         component: UserDetailsListComponent
       },
       {
+        path: "edit/:userId",
+        component: AddUserDetailsComponent,
+        resolve: { userData: UserDataResolve },
+        canActivate: [AuthGuard]
+      },
+      {
         path: "loanDetails/:userId",
         component: LoanDetailsComponent,
-        resolve: { userData: LoanDetailsResolver },
+        resolve: { userData: UserDataResolve },
         canActivate: [AuthGuard]
       },
       {

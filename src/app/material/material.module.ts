@@ -20,7 +20,8 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatCardModule } from "@angular/material/card";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatSliderModule } from '@angular/material/slider'; 
+import { MatSliderModule } from '@angular/material/slider';
+import {MatDialogModule} from '@angular/material/dialog'; 
 
 const MaterialComponents = [
   MatSelectModule,
@@ -41,7 +42,8 @@ const MaterialComponents = [
   MatCardModule,
   MatMenuModule,
   MatSliderModule,
-  SliderModule
+  SliderModule,
+  MatDialogModule
 ];
 
 @NgModule({

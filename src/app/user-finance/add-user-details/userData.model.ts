@@ -6,22 +6,22 @@ export interface UserData {
   email: string;
   areaCode: string;
   mobileNumber: number;
-  dob: string;
+  dob: Date;
   gender: string;
   martialStatus: string;
-  addresLine1: string;
-  addresLine2: string;
+  addressLine1: string;
+  addressLine2: string;
   city: string;
   state: string;
   zip: number;
   country: string;
+  creator: string;
 
   // Loan details
   loanAmount: number;
-  intrestRate:number;
+  intrestRate: number;
   term: number;
-  loanStartDate: string
+  loanStartDate: Date;
 
-  userProfilePic: File | string
-
+  userProfilePic: File | string;
 }

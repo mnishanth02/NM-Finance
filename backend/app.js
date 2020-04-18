@@ -1,4 +1,5 @@
 const path = require("path");
+var cors = require('cors');
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -22,7 +23,8 @@ mongoose
   });
 
 const app = express();
-
+// app.options('*', cors());
+app.use(cors());
 app.use(bodyParser.json());
 // reqiest is forwarded to backend images
 app.use("/images", express.static(path.join("backend/images")));

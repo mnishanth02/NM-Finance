@@ -21,8 +21,10 @@ export class SignupComponent implements OnInit, OnDestroy {
       this.signUpMsg = data.message;
       if (data.status === "success") {
         this.showSuccessMsg = true;
+        this.isLoading = false;
       } else {
         this.showErrorMsg = true;
+        this.isLoading = false;
       }
     });
   }

@@ -10,7 +10,7 @@
             routerLinkActive="active"
             ><button
               mat-raised-button
-              color="accent"
+              color="primary"
               class="float-right adduser"
             >
               Add User
@@ -22,27 +22,30 @@
 
     <mat-card *ngFor="let userList of userLists" class="card">
       <mat-card-header>
-
-        <!-- <div mat-card-avatar class="example-header-image" ></div> -->
-        <div class="post-image">
-          <img
-            [src]="userList.userProfilePic"
-            name="image"
-            [alt]=""
-          />
-        </div>
-        <!-- <div mat-card-avatar [ngStyle]="{ 'background-image': 'url(' + http://localhost:3000/images/nish-jpeg-2020-04-16T09-43-11.554Z.jpg + ')'}" ></div> -->
+        <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title
           >{{ userList.prefix }}. {{ userList.lastName }},
           {{ userList.firstName }}</mat-card-title
         >
         <mat-card-subtitle> {{ userList.email }}</mat-card-subtitle>
+        <div
+          class="col"
+          *ngIf="userIsAuthenticated && userId == userList.creator"
+        >
+          <a
+            [routerLink]="['edit', userList.id]"
+            class="float-right"
+            mat-raised-button
+            color="accent"
+            ><mat-icon>info</mat-icon></a
+          >
+        </div>
       </mat-card-header>
       <mat-card-content>
         <div class="row">
           <div class="col-md-10">
             <p>
-              {{ userList.dob }}
+              {{ userList.dob | date: 'dd/MM/yyyy' }}
             </p>
             <p>
               {{ userList.gender }}

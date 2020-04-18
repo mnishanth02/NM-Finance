@@ -5,10 +5,10 @@ import { Resolve, RouterStateSnapshot } from "@angular/router";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { UserFinanceService } from "../user-finance.service";
 import { Observable } from "rxjs";
-import { UserData } from "../add-user-details/userData.model";
+import { UserData } from "./userData.model";
 
 @Injectable()
-export class LoanDetailsResolver implements Resolve<UserData> {
+export class UserDataResolve implements Resolve<UserData> {
   constructor(private userFinanceService: UserFinanceService) {}
 
   resolve(

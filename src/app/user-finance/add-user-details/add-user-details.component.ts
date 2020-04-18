@@ -3,6 +3,8 @@ import { NgForm } from "@angular/forms";
 import { UserData } from "./userData.model";
 import { UserFinanceService } from "../user-finance.service";
 import { Subscription } from "rxjs";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { UserDataResolve } from "./User-Data-resolver.service";
 
 @Component({
   selector: "app-add-user-details",
@@ -12,44 +14,38 @@ import { Subscription } from "rxjs";
 export class AddUserDetailsComponent implements OnInit {
   isLoading = false;
   private addUserSub: Subscription;
-  constructor(private userFinanceService: UserFinanceService) {}
+  currentUserData: UserData;
+  currentUserDBId = null;
+  isDataAvailable = true;
+  mode: string = "create";
   statusMsg = "";
   showSuccessMsg = false;
   showErrorMsg = false;
   imagePreview: string;
   showDefaultImage: boolean = true;
+  selectedFile: File = null;
 
-  selectedFile: File = null
-
-  // Slider
-  // The principal Slider binding properties
-  public principalValue: number = 0;
-  public principalMinValue: number = 0;
-  public principalMaxValue: number = 500000;
-  public principalStep: number = 10000;
-  public principalType: string = "MinRange";
-
-  autoTicks = false;
-  disabled = false;
-  invert = false;
-  max = 500000;
-  min = 10000;
-  showTicks = true;
-  step = 1;
-  thumbLabel = true;
-  value = 0;
-  vertical = false;
-  tickInterval = 1;
-
-  getSliderTickInterval(): number | "auto" {
-    if (this.showTicks) {
-      return this.autoTicks ? "auto" : this.tickInterval;
-    }
-
-    return 0;
-  }
+  constructor(
+    private userFinanceService: UserFinanceService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has("userId")) {
+        this.route.data.subscribe((data: { userData: any }) => {
+          this.currentUserData = data.userData;
+          this.currentUserDBId = data.userData?._id;
+          this.isDataAvailable = true;
+          this.mode = "edit";
+        });
+      } else {
+        this.mode = "create";
+        this.currentUserDBId = null;
+      }
+    });
+
     this.addUserSub = this.userFinanceService
       .getNewUserDataSub()
       .subscribe((data) => {
@@ -59,55 +55,52 @@ export class AddUserDetailsComponent implements OnInit {
         } else {
           this.showErrorMsg = true;
         }
+        // this.mode = "create";
         this.isLoading = false;
       });
   }
 
   prefixs = [
-    { value: "mr", viewValue: "Mr" },
-    { value: "mrs", viewValue: "Mrs" },
-    { value: "ms", viewValue: "Ms" },
+    { id: "Mr", name: "Mr" },
+    { id: "Mrs", name: "Mrs" },
+    { id: "Ms", name: "Ms" },
   ];
 
   genders = [
-    { value: "male", viewValue: "Male" },
-    { value: "female", viewValue: "Female" },
-    { value: "others", viewValue: "Others" },
+    { id: "Male", name: "Male" },
+    { id: "Female", name: "Female" },
+    { id: "Others", name: "Others" },
   ];
   martialStatuses = [
-    { value: "married", viewValue: "Married" },
-    { value: "unmarried", viewValue: "Un Married" },
-    { value: "others", viewValue: "Others" },
+    { id: "Married", name: "Married" },
+    { id: "Un Married", name: "Un Married" },
+    { id: "Others", name: "Others" },
   ];
 
   citys = [
-    { value: "coimbatore", viewValue: "coimbatore" },
-    { value: "chennai", viewValue: "Chennai" },
-    { value: "goa", viewValue: "Goa" },
-    { value: "others", viewValue: "Others" },
+    { id: "Coimbatore", name: "Coimbatore" },
+    { id: "Chennai", name: "Chennai" },
+    { id: "Goa", name: "Goa" },
+    { id: "Others", name: "Others" },
   ];
 
   states = [
-    { value: "tamilNadu", viewValue: "Tamil Nadu" },
-    { value: "kerala", viewValue: "Kerala" },
-    { value: "delhi", viewValue: "Delhi" },
-    { value: "others", viewValue: "Others" },
+    { id: "Tamil Nadu", name: "Tamil Nadu" },
+    { id: "Kerala", name: "Kerala" },
+    { id: "Delhi", name: "Delhi" },
+    { id: "Others", name: "Others" },
   ];
 
   onImagePicked(event) {
-
-    this.selectedFile = <File> event.target.files[0];
-    console.log(event);
-    console.log("selected File - "+ this.selectedFile);
+    this.selectedFile = <File>event.target.files[0];
 
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
-      this.showDefaultImage= false;
+      this.showDefaultImage = false;
     };
     reader.readAsDataURL(this.selectedFile);
   }
-
 
   addNewUser(form: NgForm) {
     if (form.invalid) {
@@ -115,7 +108,7 @@ export class AddUserDetailsComponent implements OnInit {
     }
     this.isLoading = true;
     const userDataTemp: UserData = {
-      id: null,
+      id: this.currentUserDBId != null ? this.currentUserDBId : null,
       prefix: form.value.namePrefix,
       firstName: form.value.firstName,
       lastName: form.value.lastName,
@@ -125,8 +118,8 @@ export class AddUserDetailsComponent implements OnInit {
       dob: form.value.dob,
       gender: form.value.gender,
       martialStatus: form.value.martialStatus,
-      addresLine1: form.value.addressLine1,
-      addresLine2: form.value.addressLine2,
+      addressLine1: form.value.addressLine1,
+      addressLine2: form.value.addressLine2,
       city: form.value.city,
       state: form.value.state,
       zip: form.value.zip,
@@ -135,14 +128,20 @@ export class AddUserDetailsComponent implements OnInit {
       intrestRate: form.value.intrestRate,
       term: form.value.term,
       loanStartDate: form.value.loanStartDate,
+      creator: null,
       userProfilePic: this.selectedFile,
-      
     };
-    console.log("User Data Submitted- > "+ userDataTemp);
+    console.log("User Data Submitted- > " + userDataTemp);
     this.showErrorMsg = false;
     this.showSuccessMsg = false;
-    this.userFinanceService.addNewUser(userDataTemp);
-    this.showDefaultImage= true;
-    form.resetForm();
+    if (this.mode == "edit") {
+      this.userFinanceService.updateNewUser(userDataTemp);
+      this.showDefaultImage = false;
+      // this.currentUserData = this.userFinanceService.get
+    } else {
+      this.userFinanceService.addNewUser(userDataTemp);
+      this.showDefaultImage = true;
+      form.resetForm();
+    }
   }
 }
