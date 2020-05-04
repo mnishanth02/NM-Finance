@@ -1,25 +1,25 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { AuthService } from "../auth.service";
-import { Subscription } from "rxjs";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.css"],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   isLoading = false;
   private loginSub: Subscription;
-  loginMsg: string = ""; 
-  showSuccessMsg: boolean = false;
-  showErrorMsg: boolean = false;
-  constructor(private authService: AuthService) {}
+  loginMsg = '';
+  showSuccessMsg = false;
+  showErrorMsg = false;
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loginSub = this.authService.getloginSignUpSub().subscribe((data) => {
       this.loginMsg = data.message;
-      if (data.status === "success") {
+      if (data.status === 'success') {
         this.showSuccessMsg = true;
       } else {
         this.isLoading = false;

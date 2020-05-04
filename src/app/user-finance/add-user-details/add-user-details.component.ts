@@ -1,15 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { UserData } from "./userData.model";
-import { UserFinanceService } from "../user-finance.service";
-import { Subscription } from "rxjs";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
-import { UserDataResolve } from "./User-Data-resolver.service";
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { UserData } from './userData.model';
+import { UserFinanceService } from '../user-finance.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
-  selector: "app-add-user-details",
-  templateUrl: "./add-user-details.component.html",
-  styleUrls: ["./add-user-details.component.css"],
+  selector: 'app-add-user-details',
+  templateUrl: './add-user-details.component.html',
+  styleUrls: ['./add-user-details.component.css'],
 })
 export class AddUserDetailsComponent implements OnInit {
   isLoading = false;
@@ -17,31 +17,94 @@ export class AddUserDetailsComponent implements OnInit {
   currentUserData: UserData;
   currentUserDBId = null;
   isDataAvailable = true;
-  mode: string = "create";
-  statusMsg = "";
+  mode = 'create';
+  statusMsg = '';
   showSuccessMsg = false;
   showErrorMsg = false;
   imagePreview: string;
-  showDefaultImage: boolean = true;
+  showDefaultImage = true;
   selectedFile: File = null;
 
   constructor(
     private userFinanceService: UserFinanceService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
+
+
+  prefixs = [
+    { id: 'Mr', name: 'Mr' },
+    { id: 'Mrs', name: 'Mrs' },
+    { id: 'Ms', name: 'Ms' },
+  ];
+
+  genders = [
+    { id: 'Male', name: 'Male' },
+    { id: 'Female', name: 'Female' },
+    { id: 'Others', name: 'Others' },
+  ];
+  martialStatuses = [
+    { id: 'Married', name: 'Married' },
+    { id: 'Un Married', name: 'Un Married' },
+    { id: 'Others', name: 'Others' },
+  ];
+
+  citys = [
+    { id: 'Coimbatore', name: 'Coimbatore' },
+    { id: 'Chennai', name: 'Chennai' },
+    { id: 'Goa', name: 'Goa' },
+    { id: 'Others', name: 'Others' },
+  ];
+
+  states = [
+    { id: 'Tamil Nadu', name: 'Tamil Nadu' },
+    { id: 'Kerala', name: 'Kerala' },
+    { id: 'Delhi', name: 'Delhi' },
+    { id: 'Others', name: 'Others' },
+  ];
+
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has("userId")) {
+      if (paramMap.has('userId')) {
+
+
         this.route.data.subscribe((data: { userData: any }) => {
-          this.currentUserData = data.userData;
+          // this.currentUserData = data.userData;
           this.currentUserDBId = data.userData?._id;
           this.isDataAvailable = true;
-          this.mode = "edit";
+          this.showDefaultImage = false;
+          this.mode = 'edit';
+
+          this.currentUserData = {
+            id: data.userData?._id,
+            prefix: data.userData.prefix,
+            firstName: data.userData.prefix,
+            lastName: data.userData.lastName,
+            email: data.userData.email,
+            dob: data.userData.dob,
+            areaCode: data.userData.areaCode,
+            city: data.userData.city,
+            gender: data.userData.gender,
+            country: data.userData.country,
+            addressLine1: data.userData.addressLine1,
+            addressLine2: data.userData.addressLine2,
+            state: data.userData.state,
+            term: data.userData.term,
+            creator: data.userData.creator,
+            zip: data.userData.zip,
+            mobileNumber: data.userData.mobileNumber,
+            intrestRate: data.userData.intrestRate,
+            loanAmount: data.userData.loanAmount,
+            loanStartDate: data.userData.loanStartDate,
+            martialStatus: data.userData.martialStatus,
+            userProfilePic: data.userData.imagePath
+          };
+          console.log('currentUserData-> ' + this.currentUserData);
+          // console.log('currentUserData-> ' + data.userData.imagePath);
         });
       } else {
-        this.mode = "create";
+        this.mode = 'create';
         this.currentUserDBId = null;
       }
     });
@@ -52,49 +115,18 @@ export class AddUserDetailsComponent implements OnInit {
       .getNewUserDataSub()
       .subscribe((data) => {
         this.statusMsg = data.message;
-        if (data.status === "success") {
+        if (data.status === 'success') {
           this.showSuccessMsg = true;
         } else {
           this.showErrorMsg = true;
         }
-        // this.mode = "create";
+        // this.mode = 'create';
         this.isLoading = false;
       });
   }
 
-  prefixs = [
-    { id: "Mr", name: "Mr" },
-    { id: "Mrs", name: "Mrs" },
-    { id: "Ms", name: "Ms" },
-  ];
-
-  genders = [
-    { id: "Male", name: "Male" },
-    { id: "Female", name: "Female" },
-    { id: "Others", name: "Others" },
-  ];
-  martialStatuses = [
-    { id: "Married", name: "Married" },
-    { id: "Un Married", name: "Un Married" },
-    { id: "Others", name: "Others" },
-  ];
-
-  citys = [
-    { id: "Coimbatore", name: "Coimbatore" },
-    { id: "Chennai", name: "Chennai" },
-    { id: "Goa", name: "Goa" },
-    { id: "Others", name: "Others" },
-  ];
-
-  states = [
-    { id: "Tamil Nadu", name: "Tamil Nadu" },
-    { id: "Kerala", name: "Kerala" },
-    { id: "Delhi", name: "Delhi" },
-    { id: "Others", name: "Others" },
-  ];
-
   onImagePicked(event) {
-    this.selectedFile = <File>event.target.files[0];
+    this.selectedFile = event.target.files[0] as File;
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -133,10 +165,10 @@ export class AddUserDetailsComponent implements OnInit {
       creator: null,
       userProfilePic: this.selectedFile,
     };
-    console.log("User Data Submitted- > " + userDataTemp);
+    console.log('User Data Submitted- > ' + userDataTemp);
     this.showErrorMsg = false;
     this.showSuccessMsg = false;
-    if (this.mode == "edit") {
+    if (this.mode === 'edit') {
       this.userFinanceService.updateNewUser(userDataTemp);
       this.showDefaultImage = false;
       // this.currentUserData = this.userFinanceService.get

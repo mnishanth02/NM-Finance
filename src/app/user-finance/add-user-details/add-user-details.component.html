@@ -1,18 +1,10 @@
-<div
-  class="alert alert-success alert-dismissible fade show"
-  *ngIf="showSuccessMsg"
-  role="alert"
->
+<div class="alert alert-success alert-dismissible fade show" *ngIf="showSuccessMsg" role="alert">
   {{ statusMsg }}
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div
-  class="alert alert-warning alert-dismissible fade show"
-  *ngIf="showErrorMsg"
-  role="alert"
->
+<div class="alert alert-warning alert-dismissible fade show" *ngIf="showErrorMsg" role="alert">
   {{ statusMsg }}
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -21,14 +13,12 @@
 <div class="row">
   <div class="col">
     <div class="buttonHeader">
-      <a [routerLink]="['/userFinance']" routerLinkActive="active"
-        ><button mat-raised-button class="float-right goBack">
+      <a [routerLink]="['/userFinance']" routerLinkActive="active"><button mat-raised-button class="float-right goBack">
           <span class="material-icons">
             keyboard_arrow_left
           </span>
           Back
-        </button></a
-      >
+        </button></a>
     </div>
   </div>
 </div>
@@ -38,12 +28,7 @@
     <mat-card-title>Add New User</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form
-      (ngSubmit)="addNewUser(addUserForm)"
-      #addUserForm="ngForm"
-      *ngIf="!isLoading"
-      enctype="multipart/form-data"
-    >
+    <form (ngSubmit)="addNewUser(addUserForm)" #addUserForm="ngForm" *ngIf="!isLoading" enctype="multipart/form-data">
       <mat-card class="card2">
         <div class="separator">Basic Details</div>
         <mat-card-content>
@@ -51,45 +36,34 @@
             <div class="col-md-6 my-1">
               <div class="image-preview">
                 <img style="max-width: 200px; max-height: 250px;"
-                  *ngIf="showDefaultImage"
-                  src="assets/img/defaultImage.png"
-                  #defaultImage
-                  [alt]=""
-                />
+                    *ngIf="showDefaultImage"
+                    name="defaultImage"
+                    src="assets/img/defaultImage.png"
+                    #defaultImage [alt]="" />
+
+                <img style="max-width: 200px; max-height: 250px;"
+                    name="createImage"
+                    *ngIf="!showDefaultImage && mode == 'create'"
+                    [src]="imagePreview"
+                    #userProfileCreate
+                    [alt]="addUserForm.value?.firstName" />
+
+                <img style="max-width: 200px; max-height: 250px;"
+                    *ngIf="!showDefaultImage && imagePreview !== '' && mode == 'edit'"
+                    [src]="currentUserData.userProfilePic"
+                    name="editImage"
+                    #userProfileEdit
+                    [alt]="currentUserData?.firstName" />
               </div>
 
-              <div
-                class="image-preview"
-                *ngIf="imagePreview !== '' && imagePreview && !showDefaultImage"
-              >
-                <img
-                  [src]="imagePreview"
-                  #userProfile
-                  [alt]="addUserForm.value?.firstName"
-                />
-              </div>
-              
-                <button
-                mat-raised-button 
-                color="accent"
-                (click)="userProfilePic.click()"
-                type="button"
-              >
+              <button mat-raised-button color="accent" (click)="userProfilePic.click()" type="button">
                 Pick Image
               </button>
-              <input
-                type="file"
-                #userProfilePic
-                required
-                [ngModel]="currentUserData?.userProfilePic"
-                style="display: none;"
-                name="userProfilePic"
-                (change)="onImagePicked($event)"
-              />
-              <mat-error *ngIf="userProfilePic.invalid"
-              >Please select a Profile Pic</mat-error
-            >
-            
+              <input type="file" #userProfilePic required
+
+                style="display: none;" name="userProfilePic" (change)="onImagePicked($event)" />
+              <mat-error *ngIf="userProfilePic.invalid">Please select a Profile Pic</mat-error>
+
             </div>
             <div class="col-md-6 my-1">
               <div class="row">
@@ -97,20 +71,12 @@
                   <div class="form-group" class="alignSelectOption">
                     <mat-form-field>
                       <mat-label>Prefix</mat-label>
-                      <mat-select
-                        required
-                        [ngModel]="currentUserData?.prefix"
-                        #namePrefix
-                        name="namePrefix"
-                      >
-                        <mat-option
-                          *ngFor="let prefix of prefixs"
-                          [value]="prefix.id"
-                        >
+                      <mat-select required [ngModel]="currentUserData?.prefix" #namePrefix name="namePrefix">
+                        <mat-option *ngFor="let prefix of prefixs" [value]="prefix.id">
                           {{ prefix.name }}
                         </mat-option>
                       </mat-select>
-                     
+
                     </mat-form-field>
                   </div>
                 </div>
@@ -119,18 +85,9 @@
                 <div class="col-md-12 my-1">
                   <div class="form-group">
                     <mat-form-field>
-                      <input
-                        class="form-control"
-                        matInput
-                        placeholder="First Name"
-                        name="firstName"
-                        #firstName
-                        [ngModel]="currentUserData?.firstName"
-                        required
-                      />
-                      <mat-error *ngIf="firstName.invalid"
-                        >Please enter a First Name</mat-error
-                      >
+                      <input class="form-control" matInput placeholder="First Name" name="firstName" #firstName
+                        [ngModel]="currentUserData?.firstName" required />
+                      <mat-error *ngIf="firstName.invalid">Please enter a First Name</mat-error>
                     </mat-form-field>
                   </div>
                 </div>
@@ -139,18 +96,9 @@
                 <div class="col-md-12 my-1">
                   <div class="form-group">
                     <mat-form-field>
-                      <input
-                        class="form-control"
-                        matInput
-                        placeholder="Last Name"
-                        name="lastName"
-                        #lastName
-                       [ngModel]="currentUserData?.lastName"
-                        required
-                      />
-                      <mat-error *ngIf="lastName.invalid"
-                        >Please enter a Last Name</mat-error
-                      >
+                      <input class="form-control" matInput placeholder="Last Name" name="lastName" #lastName
+                        [ngModel]="currentUserData?.lastName" required />
+                      <mat-error *ngIf="lastName.invalid">Please enter a Last Name</mat-error>
                     </mat-form-field>
                   </div>
                 </div>
@@ -162,61 +110,27 @@
             <div class="col-md-6 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="E-Mail"
-                    name="email"
-                    #emailInput
-                    [ngModel]="currentUserData?.email"
-                    required
-                    email
-                  />
-                  <mat-error *ngIf="emailInput.invalid"
-                    >Please enter a valid email</mat-error
-                  >
+                  <input class="form-control" matInput placeholder="E-Mail" name="email" #emailInput
+                    [ngModel]="currentUserData?.email" required email />
+                  <mat-error *ngIf="emailInput.invalid">Please enter a valid email</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="col-md-2 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    type="number"
-                    placeholder="Area Code"
-                    pattern="[0-9]+"
-                    #areaCode
-                    [ngModel]="currentUserData?.areaCode"
-                    required
-                    min="0"
-                    name="areaCode"
-                  />
-                  <mat-error *ngIf="areaCode.invalid"
-                    >Please enter a valid Area Code</mat-error
-                  >
+                  <input class="form-control" matInput type="number" placeholder="Area Code" pattern="[0-9]+" #areaCode
+                    [ngModel]="currentUserData?.areaCode" required min="0" name="areaCode" />
+                  <mat-error *ngIf="areaCode.invalid">Please enter a valid Area Code</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="col-md-4 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    type="number"
-                    placeholder="Mobile Number"
-                    #mobileNumber
-                    pattern="[0-9]+"
-                    [ngModel]="currentUserData?.mobileNumber"
-                    required
-                    min="0"
-                    name="mobileNumber"
-                  />
-                  <mat-error *ngIf="mobileNumber.invalid"
-                    >Please enter a valid Mobile Number</mat-error
-                  >
+                  <input class="form-control" matInput type="number" placeholder="Mobile Number" #mobileNumber
+                    pattern="[0-9]+" [ngModel]="currentUserData?.mobileNumber" required min="0" name="mobileNumber" />
+                  <mat-error *ngIf="mobileNumber.invalid">Please enter a valid Mobile Number</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -225,17 +139,8 @@
             <div class="col-md-2 my-1">
               <mat-form-field>
                 <mat-label>Choose a date</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="dob"
-                  [ngModel]="currentUserData?.dob"
-                  name="dob"
-                  required
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="dob"
-                ></mat-datepicker-toggle>
+                <input matInput [matDatepicker]="dob" [ngModel]="currentUserData?.dob" name="dob" required />
+                <mat-datepicker-toggle matSuffix [for]="dob"></mat-datepicker-toggle>
                 <mat-datepicker #dob></mat-datepicker>
               </mat-form-field>
             </div>
@@ -243,10 +148,7 @@
               <mat-form-field>
                 <mat-label>Gender</mat-label>
                 <mat-select required [ngModel]="currentUserData?.gender" #gender name="gender">
-                  <mat-option
-                    *ngFor="let gender of genders"
-                    [value]="gender.id"
-                  >
+                  <mat-option *ngFor="let gender of genders" [value]="gender.id">
                     {{ gender.name }}
                   </mat-option>
                 </mat-select>
@@ -255,16 +157,8 @@
             <div class="col-md-2 my-1">
               <mat-form-field>
                 <mat-label>Martial Status</mat-label>
-                <mat-select
-                  required
-                  [ngModel]="currentUserData?.martialStatus"
-                  #martialStatus
-                  name="martialStatus"
-                >
-                  <mat-option
-                    *ngFor="let martialStatus of martialStatuses"
-                    [value]="martialStatus.id"
-                  >
+                <mat-select required [ngModel]="currentUserData?.martialStatus" #martialStatus name="martialStatus">
+                  <mat-option *ngFor="let martialStatus of martialStatuses" [value]="martialStatus.id">
                     {{ martialStatus.name }}
                   </mat-option>
                 </mat-select>
@@ -276,36 +170,18 @@
             <div class="col-md-6 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="Address Line 1"
-                    name="addressLine1"
-                    #addressLine1
-                    [ngModel]="currentUserData?.addressLine1"
-                    required
-                  />
-                  <mat-error *ngIf="addressLine1.invalid"
-                    >Please enter a valid Address Line 1</mat-error
-                  >
+                  <input class="form-control" matInput placeholder="Address Line 1" name="addressLine1" #addressLine1
+                    [ngModel]="currentUserData?.addressLine1" required />
+                  <mat-error *ngIf="addressLine1.invalid">Please enter a valid Address Line 1</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="col-md-6 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="Address Line 2"
-                    name="addressLine2"
-                    #addressLine2
-                    [ngModel]="currentUserData?.addressLine2"
-                    required
-                  />
-                  <mat-error *ngIf="addressLine2.invalid"
-                    >Please enter a valid Address Line 2</mat-error
-                  >
+                  <input class="form-control" matInput placeholder="Address Line 2" name="addressLine2" #addressLine2
+                    [ngModel]="currentUserData?.addressLine2" required />
+                  <mat-error *ngIf="addressLine2.invalid">Please enter a valid Address Line 2</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -328,10 +204,7 @@
                 <mat-form-field>
                   <mat-label>State/Provision</mat-label>
                   <mat-select required [ngModel]="currentUserData?.state" #state name="state">
-                    <mat-option
-                      *ngFor="let state of states"
-                      [value]="state.id"
-                    >
+                    <mat-option *ngFor="let state of states" [value]="state.id">
                       {{ state.name }}
                     </mat-option>
                   </mat-select>
@@ -341,36 +214,18 @@
             <div class="col-md-3 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="ZIP / Postal Code"
-                    name="zip"
-                    #zip
-                    [ngModel]="currentUserData?.zip"
-                    required
-                  />
-                  <mat-error *ngIf="zip.invalid"
-                    >Please enter a valid ZIP / Postal Cpde</mat-error
-                  >
+                  <input class="form-control" matInput placeholder="ZIP / Postal Code" name="zip" #zip
+                    [ngModel]="currentUserData?.zip" required />
+                  <mat-error *ngIf="zip.invalid">Please enter a valid ZIP / Postal Cpde</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="col-md-3 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="Country"
-                    name="country"
-                    #country
-                    [ngModel]="currentUserData?.country"
-                    required
-                  />
-                  <mat-error *ngIf="country.invalid"
-                    >Please enter a valid Country</mat-error
-                  >
+                  <input class="form-control" matInput placeholder="Country" name="country" #country
+                    [ngModel]="currentUserData?.country" required />
+                  <mat-error *ngIf="country.invalid">Please enter a valid Country</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -384,63 +239,27 @@
             <div class="col-md-4 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    type="number"
-                    placeholder="Loan Amount"
-                    #loanAmount
-                    pattern="[0-9]+"
-                    [ngModel]="currentUserData?.loanAmount"
-                    required
-                    min="0"
-                    name="loanAmount"
-                  />
-                  <mat-error *ngIf="loanAmount.invalid"
-                    >Please enter a valid Loan Amount</mat-error
-                  >
+                  <input class="form-control" matInput type="number" placeholder="Loan Amount" #loanAmount
+                    pattern="[0-9]+" [ngModel]="currentUserData?.loanAmount" required min="0" name="loanAmount" />
+                  <mat-error *ngIf="loanAmount.invalid">Please enter a valid Loan Amount</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="col-md-4 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    type="number"
-                    placeholder="Intrest Rate"
-                    #intrestRate
-                    pattern="[0-9]+"
-                    [ngModel]="currentUserData?.intrestRate"
-                    required
-                    min="0"
-                    name="intrestRate"
-                  />
-                  <mat-error *ngIf="intrestRate.invalid"
-                    >Please enter a valid Intrest Rate</mat-error
-                  >
+                  <input class="form-control" matInput type="number" placeholder="Intrest Rate" #intrestRate
+                    pattern="[0-9]+" [ngModel]="currentUserData?.intrestRate" required min="0" name="intrestRate" />
+                  <mat-error *ngIf="intrestRate.invalid">Please enter a valid Intrest Rate</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="col-md-4 my-1">
               <div class="form-group">
                 <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    type="number"
-                    placeholder="Long Term"
-                    pattern="[0-9]+"
-                    #term
-                    [ngModel]="currentUserData?.term"
-                    required
-                    min="0"
-                    name="term"
-                  />
-                  <mat-error *ngIf="term.invalid"
-                    >Please enter a valid Long Term</mat-error
-                  >
+                  <input class="form-control" matInput type="number" placeholder="Long Term" pattern="[0-9]+" #term
+                    [ngModel]="currentUserData?.term" required min="0" name="term" />
+                  <mat-error *ngIf="term.invalid">Please enter a valid Long Term</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -449,17 +268,9 @@
             <div class="col-md-4 my-1">
               <mat-form-field>
                 <mat-label>Loan Start Date</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="loanStartDate"
-                  [ngModel]="currentUserData?.loanStartDate"
-                  name="loanStartDate"
-                  required
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="loanStartDate"
-                ></mat-datepicker-toggle>
+                <input matInput [matDatepicker]="loanStartDate" [ngModel]="currentUserData?.loanStartDate"
+                  name="loanStartDate" required />
+                <mat-datepicker-toggle matSuffix [for]="loanStartDate"></mat-datepicker-toggle>
                 <mat-datepicker #loanStartDate></mat-datepicker>
               </mat-form-field>
             </div>
@@ -467,13 +278,7 @@
         </mat-card-content>
       </mat-card>
       <div class="form-group saveButtonGroup">
-        <button
-        *ngIf="mode !== 'edit'"
-          mat-raised-button
-          type="button"
-          (click)="addUserForm.resetForm()"
-          color="warn"
-        >
+        <button *ngIf="mode !== 'edit'" mat-raised-button type="button" (click)="addUserForm.resetForm()" color="warn">
           Reset
         </button>
         <button mat-raised-button type="submit" color="primary">

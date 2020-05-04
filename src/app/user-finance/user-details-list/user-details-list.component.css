@@ -21,10 +21,11 @@ mat-spinner {
   border-radius: 20px !important;
 }
 
-.example-header-image {
-   background-image: url("/assets/img/defaultImage.png");
+.header-image {
+  /* background-image: url("/assets/img/defaultImage.png"); */
   /* background-image: url("/images/nish-jpeg-2020-04-16T09-43-11.554Z.jpg"); */
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .rightArrow {

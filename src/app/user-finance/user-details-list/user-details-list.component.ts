@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   trigger,
   style,
@@ -8,37 +8,37 @@ import {
   keyframes,
   query,
   stagger,
-} from "@angular/animations";
-import { UserFinanceService } from "../user-finance.service";
-import { UserData } from "../add-user-details/userData.model";
-import { Subscription } from "rxjs";
-import { AuthService } from "src/app/auth/auth.service";
+} from '@angular/animations';
+import { UserFinanceService } from '../user-finance.service';
+import { UserData } from '../add-user-details/userData.model';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
-  selector: "app-user-details-list",
-  templateUrl: "./user-details-list.component.html",
-  styleUrls: ["./user-details-list.component.css"],
+  selector: 'app-user-details-list',
+  templateUrl: './user-details-list.component.html',
+  styleUrls: ['./user-details-list.component.css'],
   animations: [
-    trigger("userListAnimation", [
-      transition("* => *", [
-        query(":enter", style({ opacity: 0 }), { optional: true }),
+    trigger('userListAnimation', [
+      transition('* => *', [
+        query(':enter', style({ opacity: 0 }), { optional: true }),
         query(
-          ":enter",
-          stagger("50ms", [
+          ':enter',
+          stagger('50ms', [
             animate(
-              ".5s ease-in",
+              '.5s ease-in',
               keyframes([
                 style({
                   opacity: 0,
-                  transform: "translateY(-75px)",
+                  transform: 'translateY(-75px)',
                   offset: 0,
                 }),
                 style({
                   opacity: 0.0,
-                  transform: "translateY(35px)",
+                  transform: 'translateY(35px)',
                   offset: 0.3,
                 }),
-                style({ opacity: 1, transform: "translateY(0)", offset: 1 }),
+                style({ opacity: 1, transform: 'translateY(0)', offset: 1 }),
               ])
             ),
           ]),
@@ -57,12 +57,13 @@ export class UserDetailsListComponent implements OnInit, OnDestroy {
   private authStatusSubs: Subscription;
   userIsAuthenticated = false;
 
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private userFinService: UserFinanceService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userFinService.navigationLoadingSub.subscribe((status) => {

@@ -22,7 +22,8 @@
 
     <mat-card *ngFor="let userList of userLists" class="card">
       <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
+        <!-- <div mat-card-avatar class="header-image"></div> -->
+        <div mat-card-avatar class="header-image" [style.backgroundImage]="'url('+ userList.userProfilePic.toString()  + ')'"></div>
         <mat-card-title
           >{{ userList.prefix }}. {{ userList.lastName }},
           {{ userList.firstName }}</mat-card-title

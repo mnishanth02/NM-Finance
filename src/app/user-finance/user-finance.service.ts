@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { UserData } from "./add-user-details/userData.model";
-import { HttpClient } from "@angular/common/http";
-import { Subject, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { UserData } from './add-user-details/userData.model';
+import { HttpClient } from '@angular/common/http';
+import { Subject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-const BACKEND_URL = environment.apiUrl+"/user/";
+const BACKEND_URL = environment.apiUrl + '/user/';
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class UserFinanceService {
   private allUserDataList: UserData[] = [];
@@ -25,34 +25,34 @@ export class UserFinanceService {
 
   navigationLoadingSub = new Subject<boolean>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   addNewUser(userDataTemp: UserData) {
     const userData = this.popuplateFormDate(userDataTemp);
 
     this.http
       .post<{ message: string; result: any }>(
-        BACKEND_URL + "addNewUser",
+        BACKEND_URL + 'addNewUser',
         userData
       )
       .subscribe(
         (response) => {
-          if (response.message === "success") {
+          if (response.message === 'success') {
             this.addUserSubject.next({
-              status: "success",
-              message: "User Added Successful",
+              status: 'success',
+              message: 'User Added Successful',
             });
           } else {
             this.addUserSubject.next({
-              status: "error",
-              message: "Error! Try after sometime",
+              status: 'error',
+              message: 'Error! Try after sometime',
             });
           }
         },
         (error) => {
           this.addUserSubject.next({
-            status: "error",
-            message: "Error! Try after sometime",
+            status: 'error',
+            message: 'Error! Try after sometime',
           });
         }
       );
@@ -63,31 +63,31 @@ export class UserFinanceService {
 
     this.http
       .put<{ message: string }>(
-        BACKEND_URL + "updateUser/" + userDataTemp.id,
+        BACKEND_URL + 'updateUser/' + userDataTemp.id,
         userData
       )
       .subscribe(
         (response) => {
-          if (response.message === "success") {
+          if (response.message === 'success') {
             this.getUserById(userDataTemp.id).subscribe((result) => {
               this.currentUserData = result;
               this.userByIdSub.next({ userData: this.currentUserData });
             });
             this.addUserSubject.next({
-              status: "success",
-              message: "User Modified Successfully",
+              status: 'success',
+              message: 'User Modified Successfully',
             });
           } else {
             this.addUserSubject.next({
-              status: "error",
-              message: "Error! Try after sometime",
+              status: 'error',
+              message: 'Error! Try after sometime',
             });
           }
         },
         (error) => {
           this.addUserSubject.next({
-            status: "error",
-            message: "Error! Try after sometime",
+            status: 'error',
+            message: 'Error! Try after sometime',
           });
         }
       );
@@ -103,7 +103,7 @@ export class UserFinanceService {
   getAllUserList() {
     this.http
       .get<{ message: string; userList: any; count: number }>(
-        BACKEND_URL + "getAllUser"
+        BACKEND_URL + 'getAllUser'
       )
       .pipe(
         map((list) => {
@@ -152,62 +152,39 @@ export class UserFinanceService {
   }
 
   getUserById(id: string): Observable<any> {
-    return this.http.get<{
-      id: string;
-      prefix: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      areaCode: string;
-      mobileNumber: number;
-      dob: string;
-      gender: string;
-      martialStatus: string;
-      addressLine1: string;
-      addressLine2: string;
-      city: string;
-      state: string;
-      zip: number;
-      country: string;
-      creator: string;
-      loanAmount: number;
-      intrestRate: number;
-      term: number;
-      loanStartDate: string;
-      userProfilePic: File | string;
-    }>(BACKEND_URL + "getUserById/" + id);
+    return this.http.get<any>(BACKEND_URL + 'getUserById/' + id);
   }
 
   private popuplateFormDate(data: UserData) {
     const userData = new FormData();
-    userData.append("prefix", data.prefix);
-    userData.append("firstName", data.firstName);
-    userData.append("lastName", data.lastName);
-    userData.append("email", data.email);
-    userData.append("areaCode", data.areaCode);
-    userData.append("gender", data.gender);
-    userData.append("martialStatus", data.martialStatus);
-    userData.append("addressLine1", data.addressLine1);
-    userData.append("addressLine2", data.addressLine2);
-    userData.append("dob", new Date(data.dob).toISOString());
-    userData.append("mobileNumber", data.mobileNumber.toString());
-    userData.append("city", data.city);
-    userData.append("state", data.state);
-    userData.append("zip", data.zip.toString());
-    userData.append("country", data.country);
-    userData.append("loanAmount", data.loanAmount.toString());
-    userData.append("intrestRate", data.intrestRate.toString());
-    userData.append("term", data.term.toString());
+    userData.append('prefix', data.prefix);
+    userData.append('firstName', data.firstName);
+    userData.append('lastName', data.lastName);
+    userData.append('email', data.email);
+    userData.append('areaCode', data.areaCode);
+    userData.append('gender', data.gender);
+    userData.append('martialStatus', data.martialStatus);
+    userData.append('addressLine1', data.addressLine1);
+    userData.append('addressLine2', data.addressLine2);
+    userData.append('dob', new Date(data.dob).toISOString());
+    userData.append('mobileNumber', data.mobileNumber.toString());
+    userData.append('city', data.city);
+    userData.append('state', data.state);
+    userData.append('zip', data.zip.toString());
+    userData.append('country', data.country);
+    userData.append('loanAmount', data.loanAmount.toString());
+    userData.append('intrestRate', data.intrestRate.toString());
+    userData.append('term', data.term.toString());
     userData.append(
-      "loanStartDate",
+      'loanStartDate',
       new Date(data.loanStartDate).toISOString()
     );
-    userData.append("userProfilePic", data.userProfilePic);
+    userData.append('userProfilePic', data.userProfilePic);
 
     return userData;
   }
 
   onDeleteUser(id: string) {
-    return this.http.delete(BACKEND_URL + "deleteUser/" + id);
+    return this.http.delete(BACKEND_URL + 'deleteUser/' + id);
   }
 }
