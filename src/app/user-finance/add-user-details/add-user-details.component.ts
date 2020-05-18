@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserData } from './userData.model';
 import { UserFinanceService } from '../user-finance.service';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+
+import { MatTable } from '@angular/material/table';
+import { PaymentDataTabelDataSource, PaymentDataTabelItem } from './payment-data-tabel-datasource';
+
+
 
 @Component({
   selector: 'app-add-user-details',
   templateUrl: './add-user-details.component.html',
   styleUrls: ['./add-user-details.component.css'],
 })
-export class AddUserDetailsComponent implements OnInit {
+export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoading = false;
   private addUserSub: Subscription;
   currentUserData: UserData;
@@ -25,19 +29,39 @@ export class AddUserDetailsComponent implements OnInit {
   showDefaultImage = true;
   selectedFile: File = null;
 
+  // Loan calculation
+  loanAmount = 0.00;
+  term = 0.00;
+  intrestRate = 0.00;
+  extraPayment = 0.00;
+  loanStartDate = '';
+  monthlyPayment = 0;
+  totalPayment = 0;
+
+  displayPaymetDetails = false;
+  // paymentDataSource  = new PaymentDataTabelDataSource();
+
+  @ViewChild('addUserForm') userForm?: NgForm;
+  @ViewChild('loanForm') loanForm?: NgForm;
+
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable<PaymentDataTabelItem>;
+  dataSource: PaymentDataTabelDataSource;
+  // ELEMENT_DATA: PaymentElement[] = [];
+
+  displayedColumns: string[] = ['position', 'payment', 'principle', 'intrest', 'intrestPaid', 'balance'];
+  // dataSource = new MatTableDataSource<PaymentElement>();
+
   constructor(
     private userFinanceService: UserFinanceService,
     private route: ActivatedRoute,
-    private router: Router
   ) { }
-
-
   prefixs = [
     { id: 'Mr', name: 'Mr' },
     { id: 'Mrs', name: 'Mrs' },
     { id: 'Ms', name: 'Ms' },
   ];
-
   genders = [
     { id: 'Male', name: 'Male' },
     { id: 'Female', name: 'Female' },
@@ -48,14 +72,12 @@ export class AddUserDetailsComponent implements OnInit {
     { id: 'Un Married', name: 'Un Married' },
     { id: 'Others', name: 'Others' },
   ];
-
   citys = [
     { id: 'Coimbatore', name: 'Coimbatore' },
     { id: 'Chennai', name: 'Chennai' },
     { id: 'Goa', name: 'Goa' },
     { id: 'Others', name: 'Others' },
   ];
-
   states = [
     { id: 'Tamil Nadu', name: 'Tamil Nadu' },
     { id: 'Kerala', name: 'Kerala' },
@@ -63,14 +85,12 @@ export class AddUserDetailsComponent implements OnInit {
     { id: 'Others', name: 'Others' },
   ];
 
-
   ngOnInit(): void {
+
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('userId')) {
-
-
         this.route.data.subscribe((data: { userData: any }) => {
-          // this.currentUserData = data.userData;
           this.currentUserDBId = data.userData?._id;
           this.isDataAvailable = true;
           this.showDefaultImage = false;
@@ -86,6 +106,7 @@ export class AddUserDetailsComponent implements OnInit {
             areaCode: data.userData.areaCode,
             city: data.userData.city,
             gender: data.userData.gender,
+            martialStatus: data.userData.martialStatus,
             country: data.userData.country,
             addressLine1: data.userData.addressLine1,
             addressLine2: data.userData.addressLine2,
@@ -96,12 +117,11 @@ export class AddUserDetailsComponent implements OnInit {
             mobileNumber: data.userData.mobileNumber,
             intrestRate: data.userData.intrestRate,
             loanAmount: data.userData.loanAmount,
+            extraPayment: data.userData.extraPayment,
             loanStartDate: data.userData.loanStartDate,
-            martialStatus: data.userData.martialStatus,
             userProfilePic: data.userData.imagePath
           };
           console.log('currentUserData-> ' + this.currentUserData);
-          // console.log('currentUserData-> ' + data.userData.imagePath);
         });
       } else {
         this.mode = 'create';
@@ -111,6 +131,7 @@ export class AddUserDetailsComponent implements OnInit {
     this.userFinanceService.getUserByIdObservable().subscribe((result) => {
       this.currentUserData = result.userData;
     });
+
     this.addUserSub = this.userFinanceService
       .getNewUserDataSub()
       .subscribe((data) => {
@@ -120,14 +141,104 @@ export class AddUserDetailsComponent implements OnInit {
         } else {
           this.showErrorMsg = true;
         }
-        // this.mode = 'create';
         this.isLoading = false;
       });
+  } // ngOnInit END
+
+
+
+  ngAfterViewInit() {
+
+
+  } // ngAfterViewInit END
+
+  private calculate(amount, months, rate, extra) {
+
+
+    const i = rate / 100;
+    this.monthlyPayment = amount * (i / 12) * Math.pow((1 + i / 12), months) / (Math.pow((1 + i / 12), months) - 1);
+    this.totalPayment = this.roundTo(this.monthlyPayment + extra, 2);
+    let currentBalance = +amount;
+    let totalIntrest = 0;
+    let paymentCounter = 1;
+    this.monthlyPayment = this.roundTo(this.monthlyPayment + extra, 2);
+    while (currentBalance > 0) {
+
+      const towardsIntrest = (i / 12) * +currentBalance;
+
+      if (this.monthlyPayment > currentBalance) {
+        this.monthlyPayment = this.roundTo(currentBalance + towardsIntrest, 2);
+      }
+      const towardsBalance = +this.monthlyPayment - +towardsIntrest;
+      totalIntrest = totalIntrest + towardsIntrest;
+      currentBalance = +currentBalance - +towardsBalance;
+
+      const paymentElement: PaymentDataTabelItem = {
+        position: paymentCounter,
+        payment: this.roundTo(this.monthlyPayment, 2),
+        principle: this.roundTo(towardsBalance, 2),
+        intrest: this.roundTo(towardsIntrest, 2),
+        intrestPaid: this.roundTo(totalIntrest, 2),
+        balance: this.roundTo(currentBalance, 2)
+      };
+
+      paymentCounter++;
+      this.dataSource.data.push(paymentElement);
+
+
+    }
+
   }
 
-  onImagePicked(event) {
-    this.selectedFile = event.target.files[0] as File;
+  private roundTo(num, digits) {
+    if (digits === undefined) {
+      digits = 0;
+    }
+    const multiplicator = Math.pow(10, digits);
+    num = parseFloat((num * multiplicator).toFixed(11));
+    const test = (Math.round(num) / multiplicator);
+    return +(test.toFixed(digits));
+  }
 
+  loadPaymentDetails(event) {
+
+    console.log(event);
+
+    if (event.name !== '' && event.name === 'loanAmount') {
+      this.loanAmount = parseFloat(event.value);
+    }
+    if (event.name !== '' && event.name === 'intrestRate') {
+      this.intrestRate = parseFloat(event.value);
+    }
+    if (event.name !== '' && event.name === 'term') {
+      this.term = parseFloat(event.value) * 12;
+    }
+    if (event.name !== '' && event.name === 'extraPayment') {
+      this.extraPayment = parseFloat(event.value);
+    }
+    if (this.loanAmount > 0 && this.intrestRate > 0 && this.term > 0) {
+      this.dataSource = new PaymentDataTabelDataSource();
+      this.calculate(this.loanAmount, this.term, this.intrestRate, this.extraPayment);
+      this.displayPaymetDetails = true;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  onImagePicked(event) {
+    this.selectedFile = (event.target as HTMLInputElement).files[0];
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
@@ -158,12 +269,13 @@ export class AddUserDetailsComponent implements OnInit {
       state: form.value.state,
       zip: form.value.zip,
       country: form.value.country,
+      creator: null,
+      userProfilePic: this.selectedFile,
       loanAmount: form.value.loanAmount,
       intrestRate: form.value.intrestRate,
       term: form.value.term,
+      extraPayment: form.value.extraPayment,
       loanStartDate: form.value.loanStartDate,
-      creator: null,
-      userProfilePic: this.selectedFile,
     };
     console.log('User Data Submitted- > ' + userDataTemp);
     this.showErrorMsg = false;
@@ -177,5 +289,10 @@ export class AddUserDetailsComponent implements OnInit {
       this.showDefaultImage = true;
       form.resetForm();
     }
+  }
+
+
+  ngOnDestroy() {
+    this.addUserSub.unsubscribe();
   }
 }

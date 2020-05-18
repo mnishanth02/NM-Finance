@@ -7,6 +7,8 @@ import { MaterialModule } from '../material/material.module';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+
 
 @NgModule({
   declarations: [
@@ -15,6 +17,11 @@ import { FormsModule } from '@angular/forms';
     AddUserDetailsComponent,
     LoanDetailsComponent,
   ],
-  imports: [CommonModule, MaterialModule, AppRoutingModule, FormsModule],
+  imports: [CommonModule,
+    MaterialModule,
+    AppRoutingModule,
+    FormsModule,
+    MatTableModule,
+  ]
 })
 export class UserFinanceModule { }

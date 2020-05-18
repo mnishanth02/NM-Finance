@@ -1,19 +1,10 @@
-.card {
+.card,
+.card2,
+.card3 {
   max-width: 1275px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border-radius: 8px;
-  margin: 15px 5px;
-  position: relative;
-}
-
-.card2 {
-  max-width: 1275px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-    0 3px 1 /*  */ 0px 0 rgba(0, 0, 0, 0.19);
   border-radius: 8px;
   margin: 15px 5px;
   position: relative;
@@ -142,6 +133,16 @@ mat-card-header {
 }
 .mat-slider-min-value:not(.mat-slider-thumb-label-showing) .mat-slider-thumb {
   background-color: white !important;
+}
+
+table {
+  width: 100%;
+}
+
+.paymentTable {
+  height: 400px;
+  overflow: auto;
+  margin: 20px auto;
 }
 
 /* Slider css END */

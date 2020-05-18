@@ -129,6 +129,7 @@ export class UserFinanceService {
                 loanAmount: userList.loanAmount,
                 intrestRate: userList.intrestRate,
                 term: userList.term,
+                extraPayment: userList.extraPayment,
                 loanStartDate: userList.loanStartDate,
                 creator: userList.creator,
                 userProfilePic: userList.imagePath,
@@ -175,6 +176,7 @@ export class UserFinanceService {
     userData.append('loanAmount', data.loanAmount.toString());
     userData.append('intrestRate', data.intrestRate.toString());
     userData.append('term', data.term.toString());
+    userData.append('extraPayment', data.extraPayment.toString());
     userData.append(
       'loanStartDate',
       new Date(data.loanStartDate).toISOString()

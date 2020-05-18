@@ -35,33 +35,24 @@
           <div class="row">
             <div class="col-md-6 my-1">
               <div class="image-preview">
-                <img style="max-width: 200px; max-height: 250px;"
-                    *ngIf="showDefaultImage"
-                    name="defaultImage"
-                    src="assets/img/defaultImage.png"
-                    #defaultImage [alt]="" />
+                <img style="max-width: 200px; max-height: 250px;" *ngIf="showDefaultImage" name="defaultImage"
+                  src="assets/img/defaultImage.png" #defaultImage [alt]="" />
+
+                <img style="max-width: 200px; max-height: 250px;" name="createImage"
+                  *ngIf="!showDefaultImage && mode == 'create'" [src]="imagePreview" #userProfileCreate
+                  [alt]="addUserForm.value?.firstName" />
 
                 <img style="max-width: 200px; max-height: 250px;"
-                    name="createImage"
-                    *ngIf="!showDefaultImage && mode == 'create'"
-                    [src]="imagePreview"
-                    #userProfileCreate
-                    [alt]="addUserForm.value?.firstName" />
-
-                <img style="max-width: 200px; max-height: 250px;"
-                    *ngIf="!showDefaultImage && imagePreview !== '' && mode == 'edit'"
-                    [src]="currentUserData.userProfilePic"
-                    name="editImage"
-                    #userProfileEdit
-                    [alt]="currentUserData?.firstName" />
+                  *ngIf="!showDefaultImage && imagePreview !== '' && mode == 'edit'"
+                  [src]="currentUserData.userProfilePic" name="editImage" #userProfileEdit
+                  [alt]="currentUserData?.firstName" />
               </div>
 
               <button mat-raised-button color="accent" (click)="userProfilePic.click()" type="button">
                 Pick Image
               </button>
-              <input type="file" #userProfilePic required
-
-                style="display: none;" name="userProfilePic" (change)="onImagePicked($event)" />
+              <input type="file" #userProfilePic required style="display: none;" name="userProfilePic"
+                (change)="onImagePicked($event)" />
               <mat-error *ngIf="userProfilePic.invalid">Please select a Profile Pic</mat-error>
 
             </div>
@@ -235,45 +226,110 @@
       <mat-card class="card2">
         <div class="separator">Loan Details</div>
         <mat-card-content>
+          <form #loanForm="ngForm">
+            <div class="row">
+              <div class="col-md-5 my-1">
+                <div class="form-group">
+                  <mat-form-field>
+                    <input class="form-control" (focusout)="loadPaymentDetails($event.target)" matInput type="number"
+                      placeholder="Loan Amount" #loanAmount pattern="[0-9]*"
+                      [ngModel]="currentUserData?.loanAmount ? currentUserData.loanAmount : 0" required min="0"
+                      name="loanAmount" />
+                    <mat-error *ngIf="loanAmount.invalid">Please enter a valid Loan Amount</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <mat-form-field>
+                    <input class="form-control" (focusout)="loadPaymentDetails($event.target)" matInput type="number"
+                      placeholder="Long Term" pattern="[0-9]+" #term
+                      [ngModel]="currentUserData?.term ? currentUserData.term : 0" required min="0" name="term" />
+                    <mat-error *ngIf="term.invalid">Please enter a valid Long Term</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <mat-form-field>
+                    <input class="form-control" (focusout)="loadPaymentDetails($event.target)" matInput type="number"
+                      placeholder="Intrest Rate" #intrestRate pattern="[0-9]*"
+                      [ngModel]="currentUserData?.intrestRate ? currentUserData.intrestRate : 0" required min="0"
+                      name="intrestRate" />
+                    <mat-error *ngIf="intrestRate.invalid">Please enter a valid Intrest Rate</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <mat-form-field>
+                    <input class="form-control" (focusout)="loadPaymentDetails($event.target)" matInput type="number"
+                      placeholder="Extra Payment Monthly" pattern="[0-9]+" #extraPayment
+                      [ngModel]="currentUserData?.extraPayment ? currentUserData?.extraPayment : 0 " required min="0"
+                      name="extraPayment" />
+                    <mat-error *ngIf="extraPayment.invalid">Please enter a valid Amount</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <mat-form-field>
+                    <mat-label>Loan Start Date</mat-label>
+                    <input matInput [matDatepicker]="loanStartDate" [ngModel]="currentUserData?.loanStartDate"
+                      name="loanStartDate" required />
+                    <mat-datepicker-toggle matSuffix [for]="loanStartDate"></mat-datepicker-toggle>
+                    <mat-datepicker #loanStartDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-5 my-1">
+                <p>Loan Amount : $ {{ loanAmount.value }}</p>
+                <p>No of Months : {{ term.value }}</p>
+                <p>Intrest Rate : {{ intrestRate.value }} %</p>
+                <p>Monthly Payment : $ {{ monthlyPayment }}</p>
+                <p>Extra Monthly Payment : $ {{ extraPayment.value }}</p>
+                <p>Total Payments : $ {{ totalPayment }}</p>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="card3" *ngIf="displayPaymetDetails">
+        <div class="separator">Payment Details</div>
+        <mat-card-content>
           <div class="row">
-            <div class="col-md-4 my-1">
-              <div class="form-group">
-                <mat-form-field>
-                  <input class="form-control" matInput type="number" placeholder="Loan Amount" #loanAmount
-                    pattern="[0-9]+" [ngModel]="currentUserData?.loanAmount" required min="0" name="loanAmount" />
-                  <mat-error *ngIf="loanAmount.invalid">Please enter a valid Loan Amount</mat-error>
-                </mat-form-field>
-              </div>
+            <div class="col-md-12 my-1 paymentTable">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" aria-label="Elements">
+
+                <ng-container matColumnDef="position">
+                  <th mat-header-cell *matHeaderCellDef> Payment No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="payment">
+                  <th mat-header-cell *matHeaderCellDef> Payment </th>
+                  <td mat-cell *matCellDef="let element"> {{element.payment}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="principle">
+                  <th mat-header-cell *matHeaderCellDef> Principle </th>
+                  <td mat-cell *matCellDef="let element"> {{element.principle}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="intrest">
+                  <th mat-header-cell *matHeaderCellDef> Intrest </th>
+                  <td mat-cell *matCellDef="let element"> {{element.intrest}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="intrestPaid">
+                  <th mat-header-cell *matHeaderCellDef> Intrest Paid </th>
+                  <td mat-cell *matCellDef="let element"> {{element.intrestPaid}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="balance">
+                  <th mat-header-cell *matHeaderCellDef> Balance </th>
+                  <td mat-cell *matCellDef="let element"> {{element.balance}} </td>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </ng-container>
+              </table>
+
             </div>
-            <div class="col-md-4 my-1">
-              <div class="form-group">
-                <mat-form-field>
-                  <input class="form-control" matInput type="number" placeholder="Intrest Rate" #intrestRate
-                    pattern="[0-9]+" [ngModel]="currentUserData?.intrestRate" required min="0" name="intrestRate" />
-                  <mat-error *ngIf="intrestRate.invalid">Please enter a valid Intrest Rate</mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col-md-4 my-1">
-              <div class="form-group">
-                <mat-form-field>
-                  <input class="form-control" matInput type="number" placeholder="Long Term" pattern="[0-9]+" #term
-                    [ngModel]="currentUserData?.term" required min="0" name="term" />
-                  <mat-error *ngIf="term.invalid">Please enter a valid Long Term</mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 my-1">
-              <mat-form-field>
-                <mat-label>Loan Start Date</mat-label>
-                <input matInput [matDatepicker]="loanStartDate" [ngModel]="currentUserData?.loanStartDate"
-                  name="loanStartDate" required />
-                <mat-datepicker-toggle matSuffix [for]="loanStartDate"></mat-datepicker-toggle>
-                <mat-datepicker #loanStartDate></mat-datepicker>
-              </mat-form-field>
-            </div>
+
           </div>
         </mat-card-content>
       </mat-card>

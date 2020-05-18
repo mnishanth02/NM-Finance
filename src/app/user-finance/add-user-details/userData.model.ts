@@ -21,6 +21,7 @@ export interface UserData {
   loanAmount: number;
   intrestRate: number;
   term: number;
+  extraPayment: number;
   loanStartDate: Date;
 
   userProfilePic: File | string;

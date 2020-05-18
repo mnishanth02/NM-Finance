@@ -21,7 +21,8 @@ const addNewUserSchema = mongoose.Schema({
   intrestRate: { type: Number, required: true },
   term: { type: Number, required: true },
   loanStartDate: { type: String, required: true },
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" ,  required: true },
+  extraPayment: { type: String, requred: true },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   imagePath: { type: String, required: true }
 
 });
