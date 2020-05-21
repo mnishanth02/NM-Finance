@@ -8,6 +8,9 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DeleteLoanDialogComponent } from './loan-details/delete-loan.component';
 
 
 @NgModule({
@@ -16,12 +19,17 @@ import { MatTableModule } from '@angular/material/table';
     UserDetailsListComponent,
     AddUserDetailsComponent,
     LoanDetailsComponent,
+    DeleteLoanDialogComponent
   ],
   imports: [CommonModule,
     MaterialModule,
     AppRoutingModule,
     FormsModule,
     MatTableModule,
-  ]
+    MatExpansionModule,
+    MatDialogModule,
+
+  ],
+  entryComponents: [DeleteLoanDialogComponent]
 })
 export class UserFinanceModule { }

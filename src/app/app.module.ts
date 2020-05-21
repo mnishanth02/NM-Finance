@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 import { MaterialModule } from './material/material.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +16,8 @@ import { AuthInterceptor } from './auth/auth-interceptor';
 import { ErrorInterceptor } from './error-interceptor';
 import { ErrorComponent } from './error/error.component';
 import { UserDataResolve } from './user-finance/add-user-details/User-Data-resolver.service';
+
+
 
 @NgModule({
   declarations: [
@@ -38,6 +41,6 @@ import { UserDataResolve } from './user-finance/add-user-details/User-Data-resol
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ErrorComponent],
+  entryComponents: [ErrorComponent]
 })
 export class AppModule { }

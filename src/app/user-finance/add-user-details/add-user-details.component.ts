@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserData } from './userData.model';
 import { UserFinanceService } from '../user-finance.service';
@@ -15,7 +15,7 @@ import { PaymentDataTabelDataSource, PaymentDataTabelItem } from './payment-data
   templateUrl: './add-user-details.component.html',
   styleUrls: ['./add-user-details.component.css'],
 })
-export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AddUserDetailsComponent implements OnInit, OnDestroy {
   isLoading = false;
   private addUserSub: Subscription;
   currentUserData: UserData;
@@ -37,7 +37,7 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   loanStartDate = '';
   monthlyPayment = 0;
   totalPayment = 0;
-
+  fieldsetDisabled = false;
   displayPaymetDetails = false;
   // paymentDataSource  = new PaymentDataTabelDataSource();
 
@@ -86,8 +86,6 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   ];
 
   ngOnInit(): void {
-
-
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('userId')) {
         this.route.data.subscribe((data: { userData: any }) => {
@@ -121,6 +119,10 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit
             loanStartDate: data.userData.loanStartDate,
             userProfilePic: data.userData.imagePath
           };
+          if (this.mode === 'edit') {
+            this.fieldsetDisabled = true;
+
+          }
           console.log('currentUserData-> ' + this.currentUserData);
         });
       } else {
@@ -145,12 +147,9 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       });
   } // ngOnInit END
 
-
-
-  ngAfterViewInit() {
-
-
-  } // ngAfterViewInit END
+  // enableEdit() {
+  //   this.fieldsetDisabled = false;
+  // }
 
   private calculate(amount, months, rate, extra) {
 
@@ -158,35 +157,35 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     const i = rate / 100;
     this.monthlyPayment = amount * (i / 12) * Math.pow((1 + i / 12), months) / (Math.pow((1 + i / 12), months) - 1);
     this.totalPayment = this.roundTo(this.monthlyPayment + extra, 2);
-    let currentBalance = +amount;
-    let totalIntrest = 0;
-    let paymentCounter = 1;
+    // let currentBalance = +amount;
+    // let totalIntrest = 0;
+    // let paymentCounter = 1;
     this.monthlyPayment = this.roundTo(this.monthlyPayment + extra, 2);
-    while (currentBalance > 0) {
+    // while (currentBalance > 0) {
 
-      const towardsIntrest = (i / 12) * +currentBalance;
+    //   const towardsIntrest = (i / 12) * +currentBalance;
 
-      if (this.monthlyPayment > currentBalance) {
-        this.monthlyPayment = this.roundTo(currentBalance + towardsIntrest, 2);
-      }
-      const towardsBalance = +this.monthlyPayment - +towardsIntrest;
-      totalIntrest = totalIntrest + towardsIntrest;
-      currentBalance = +currentBalance - +towardsBalance;
+    //   if (this.monthlyPayment > currentBalance) {
+    //     this.monthlyPayment = this.roundTo(currentBalance + towardsIntrest, 2);
+    //   }
+    //   const towardsBalance = +this.monthlyPayment - +towardsIntrest;
+    //   totalIntrest = totalIntrest + towardsIntrest;
+    //   currentBalance = +currentBalance - +towardsBalance;
 
-      const paymentElement: PaymentDataTabelItem = {
-        position: paymentCounter,
-        payment: this.roundTo(this.monthlyPayment, 2),
-        principle: this.roundTo(towardsBalance, 2),
-        intrest: this.roundTo(towardsIntrest, 2),
-        intrestPaid: this.roundTo(totalIntrest, 2),
-        balance: this.roundTo(currentBalance, 2)
-      };
+    //   const paymentElement: PaymentDataTabelItem = {
+    //     position: paymentCounter,
+    //     payment: this.roundTo(this.monthlyPayment, 2),
+    //     principle: this.roundTo(towardsBalance, 2),
+    //     intrest: this.roundTo(towardsIntrest, 2),
+    //     intrestPaid: this.roundTo(totalIntrest, 2),
+    //     balance: this.roundTo(currentBalance, 2)
+    //   };
 
-      paymentCounter++;
-      this.dataSource.data.push(paymentElement);
+    //   paymentCounter++;
+    //   this.dataSource.data.push(paymentElement);
 
 
-    }
+    // }
 
   }
 
@@ -219,7 +218,7 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.loanAmount > 0 && this.intrestRate > 0 && this.term > 0) {
       this.dataSource = new PaymentDataTabelDataSource();
       this.calculate(this.loanAmount, this.term, this.intrestRate, this.extraPayment);
-      this.displayPaymetDetails = true;
+      // this.displayPaymetDetails = true;
     }
   }
 

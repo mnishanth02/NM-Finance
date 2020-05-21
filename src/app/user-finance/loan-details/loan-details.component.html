@@ -1,18 +1,10 @@
-<div
-  class="alert alert-success alert-dismissible fade show"
-  *ngIf="showSuccessMsg"
-  role="alert"
->
+<div class="alert alert-success alert-dismissible fade show" *ngIf="showSuccessMsg" role="alert">
   {{ statusMsg }}
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div
-  class="alert alert-warning alert-dismissible fade show"
-  *ngIf="showErrorMsg"
-  role="alert"
->
+<div class="alert alert-warning alert-dismissible fade show" *ngIf="showErrorMsg" role="alert">
   {{ statusMsg }}
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -22,113 +14,104 @@
 <div class="row">
   <div class="col">
     <div class="buttonHeader">
-      <a [routerLink]="['/userFinance']" routerLinkActive="active"
-        ><button mat-raised-button class="float-right goBack">
+      <a [routerLink]="['/userFinance']" routerLinkActive="active"><button mat-raised-button class="float-right goBack">
           <span class="material-icons">
             keyboard_arrow_left
           </span>
           Back
-        </button></a
-      >
+        </button></a>
     </div>
   </div>
 </div>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-card class="card2" *ngIf="isDataAvailable && !isLoading">
+
+
   <mat-card-header>
-    <div class="row">
-      <div class="col-md-11">
-        <mat-card-title>Loan Details</mat-card-title>
-        <mat-card-subtitle
-          >{{ currentUserData.firstName }}
-          {{ currentUserData.lastName }}</mat-card-subtitle
-        >
-      </div>
-      <div class="col-md-1" *ngIf="userIsAuthenticated && userId == currentUserData.creator">
-        <button mat-raised-button color="warn" class="float-right" (click)="onDelete()">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+    <div mat-card-avatar class="header-image"
+      [style.backgroundImage]="'url('+ currentUserData.userProfilePic.toString()  + ')'"></div>
+    <mat-card-title>{{currentUserData.prefix}} {{ currentUserData.firstName }} {{ currentUserData.lastName }}
+    </mat-card-title>
+    <mat-card-subtitle>{{ currentUserData.email }}</mat-card-subtitle>
+
+    <div class="col" *ngIf="userIsAuthenticated && userId == currentUserData.creator">
+      <button mat-raised-button color="warn" class="float-right" (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
   </mat-card-header>
+
+
   <mat-card-content>
-    <mat-card>
-      <form
-        #addUserForm="ngForm"
-        *ngIf="!isLoading"
-      >
-        <div class="separator">Basic Details</div>
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-2 my-1">
-              <div class="form-group" class="alignSelectOption">
-                <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="First Name"
-                    name="firstName"
-                    #firstName
-                    ngModel
-                    required
-                  />
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col-md-4 my-1">
-              <div class="form-group">
-                <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="First Name"
-                    name="firstName"
-                    #firstName
-                    ngModel
-                    required
-                  />
-                  <mat-error *ngIf="firstName.invalid"
-                    >Please enter a First Name</mat-error
-                  >
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col-md-6 my-1">
-              <div class="form-group">
-                <mat-form-field>
-                  <input
-                    class="form-control"
-                    matInput
-                    placeholder="Last Name"
-                    name="lastName"
-                    #lastName
-                    ngModel
-                    required
-                  />
-                  <mat-error *ngIf="lastName.invalid"
-                    >Please enter a Last Name</mat-error
-                  >
-                </mat-form-field>
-              </div>
-            </div>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-description>
+            <strong>User Details</strong>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="row my-4">
+          <div class="col-md-6">
+            <b>First name : </b> {{currentUserData.firstName}}
           </div>
-        </mat-card-content>
-        <mat-card-actions>
-          <div class="form-group saveButtonGroup" *ngIf="userIsAuthenticated && userId == currentUserData.creator">
-            <button
-              mat-raised-button
-              type="button"
-              (click)="addUserForm.resetForm()"
-              color="accent"
-            >
-              Reset
-            </button>
-            <button mat-raised-button type="submit" color="primary">
-              Save
-            </button>
+          <div class="col-md-6">
+            <b>Last Name :</b> {{currentUserData.lastName}}
           </div>
-        </mat-card-actions>
-      </form>
-    </mat-card>
+        </div>
+
+        <div class="row my-4">
+          <div class="col-md-6">
+            <b>Email : </b> {{currentUserData.email}}
+          </div>
+          <div class="col-md-6">
+            <b>Mobile : </b>{{currentUserData.mobileNumber}}
+          </div>
+        </div>
+
+        <div class="row my-4">
+          <div class="col-md-6">
+            <b>Date Of Birth : </b> {{currentUserData.dob}}
+          </div>
+          <div class="col-md-6">
+            <b>Gender :</b> {{currentUserData.gender}}
+          </div>
+        </div>
+
+        <div class="row my-4">
+          <div class="col-md-6">
+            <b>Address : </b> {{currentUserData.addressLine1}} , {{currentUserData.addressLine2}}
+          </div>
+          <div class="col-md-6">
+            <b>City :</b> {{currentUserData.city}} , {{currentUserData.zip}}
+          </div>
+        </div>
+
+        <div class="row my-4">
+          <div class="col-md-6">
+            <b>State : </b> {{currentUserData.state}}
+          </div>
+          <div class="col-md-6">
+            <b> Country :</b> {{currentUserData.country}}
+          </div>
+        </div>
+
+        <div class="row my-4">
+          <div class="col-md-6">
+            <b>Address : </b> {{currentUserData.addressLine1}} , {{currentUserData.addressLine2}}
+          </div>
+          <div class="col-md-6">
+            <b> City : </b> {{currentUserData.city}}
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+
+    <div class="row">
+      <div class="col"></div>
+    </div>
+
   </mat-card-content>
 </mat-card>
