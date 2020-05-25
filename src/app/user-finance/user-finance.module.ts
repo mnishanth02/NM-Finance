@@ -7,7 +7,7 @@ import { MaterialModule } from '../material/material.module';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DeleteLoanDialogComponent } from './loan-details/delete-loan.component';
@@ -25,7 +25,6 @@ import { DeleteLoanDialogComponent } from './loan-details/delete-loan.component'
     MaterialModule,
     AppRoutingModule,
     FormsModule,
-    MatTableModule,
     MatExpansionModule,
     MatDialogModule,
 

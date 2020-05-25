@@ -2,7 +2,8 @@ mat-spinner {
   margin: auto;
 }
 
-.card2 {
+.card2,
+.card3 {
   max-width: 1275px;
   display: flex;
   flex-direction: column;
@@ -21,10 +22,73 @@ mat-spinner {
   display: inline-block;
 }
 
-#signup .container #signup-row #signup-column #signup-box {
-  margin-top: 120px;
-  max-width: 700px;
+table {
+  width: 100%;
 }
-#signup .container #signup-row #signup-column #signup-box #signup-form {
-  padding: 20px;
+
+.paymentTable {
+  height: 600px;
+  overflow: auto;
+  margin: 20px auto;
+}
+
+
+.mat-card> :first-child.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0px 20px 0px;
+  font-size: x-large;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0px 20px 0px;
+  font-size: x-large;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px solid #673ab7;
+}
+
+.separator::before {
+  margin-right: 0.25em;
+}
+
+.separator::after {
+  margin-left: 0.25em;
+}
+
+
+
+/* Row Expansion  */
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.activeMonthList:hover {
+  background: whitesmoke;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
 }

@@ -45,11 +45,11 @@
   <mat-card-content>
 
     <mat-accordion>
-      <mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header>
-          <mat-panel-description>
-            <strong>User Details</strong>
-          </mat-panel-description>
+          <mat-panel-title>
+            <h2><u>User Details</u></h2>
+          </mat-panel-title>
         </mat-expansion-panel-header>
 
         <div class="row my-4">
@@ -109,9 +109,94 @@
     </mat-accordion>
 
 
-    <div class="row">
-      <div class="col"></div>
-    </div>
+    <mat-card class="card3 ">
+      <div class="separator">Payment Details</div>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12 my-1 paymentTable" *ngIf="displayPaymetDetails">
+            <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" aria-label="Elements">
+
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef> Payment No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="month">
+                <th mat-header-cell *matHeaderCellDef> Month </th>
+                <td mat-cell *matCellDef="let element"> {{element.month}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="payment">
+                <th mat-header-cell *matHeaderCellDef> Payment </th>
+                <td mat-cell *matCellDef="let element"> {{element.payment}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="principle">
+                <th mat-header-cell *matHeaderCellDef> Principle </th>
+                <td mat-cell *matCellDef="let element"> {{element.principle}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="intrest">
+                <th mat-header-cell *matHeaderCellDef> Intrest </th>
+                <td mat-cell *matCellDef="let element"> {{element.intrest}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="intrestPaid">
+                <th mat-header-cell *matHeaderCellDef> Intrest Paid </th>
+                <td mat-cell *matCellDef="let element"> {{element.intrestPaid}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef> Balance </th>
+                <td mat-cell *matCellDef="let element"> {{element.balance}} </td>
+
+                <tr mat-header-row *matHeaderRowDef="columnsDisplay; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnsDisplay;"></tr>
+              </ng-container>
+            </table> -->
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+          </div>
+
+
+          <!-- Testing Expansion Row -->
+          <div class="col-md-12 my-1 paymentTable mat-elevation-z8">
+            <table mat-table [dataSource]="dataSourceYear" multiTemplateDataRows >
+              <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayYear">
+                <th mat-header-cell *matHeaderCellDef> {{column | titlecase}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayMonth.length">
+                  <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <table mat-table [dataSource]="dataSourceMonth">
+                      <ng-container matColumnDef="{{column1}}" *ngFor="let column1 of columnsToDisplayMonth">
+                        <!-- <th mat-header-cell *matHeaderCellDef> {{column1}} </th> -->
+                        <td mat-cell *matCellDef="let element1"> {{element1[column1]}} </td>
+                      </ng-container>
+
+                      <!-- <tr mat-header-row *matHeaderRowDef="columnsToDisplayMonthYear"></tr> -->
+                      <tr mat-row *matRowDef="let element; columns: columnsToDisplayMonth;" class="activeMonthList">
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </ng-container>
+
+
+              <tr mat-header-row *matHeaderRowDef="columnsToDisplayYear sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: columnsToDisplayYear;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element" style="cursor: pointer;"
+                (click)="expandedElement = expandedElement === element ? null : element; elementChanged(expandedElement);">
+              </tr>
+              <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
   </mat-card-content>
 </mat-card>

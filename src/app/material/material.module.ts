@@ -20,6 +20,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 const MaterialComponents = [
@@ -41,6 +43,8 @@ const MaterialComponents = [
   MatCardModule,
   MatMenuModule,
   MatSliderModule,
+  MatTableModule,
+  MatPaginatorModule
 ];
 
 @NgModule({

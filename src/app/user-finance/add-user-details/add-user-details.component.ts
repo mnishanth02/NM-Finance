@@ -5,10 +5,6 @@ import { UserFinanceService } from '../user-finance.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
-import { MatTable } from '@angular/material/table';
-import { PaymentDataTabelDataSource, PaymentDataTabelItem } from './payment-data-tabel-datasource';
-
-
 
 @Component({
   selector: 'app-add-user-details',
@@ -20,7 +16,7 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy {
   private addUserSub: Subscription;
   currentUserData: UserData;
   currentUserDBId = null;
-  isDataAvailable = true;
+  isDataAvailable = false;
   mode = 'create';
   statusMsg = '';
   showSuccessMsg = false;
@@ -39,19 +35,17 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy {
   totalPayment = 0;
   fieldsetDisabled = false;
   displayPaymetDetails = false;
-  // paymentDataSource  = new PaymentDataTabelDataSource();
 
   @ViewChild('addUserForm') userForm?: NgForm;
   @ViewChild('loanForm') loanForm?: NgForm;
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   // @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatTable) table: MatTable<PaymentDataTabelItem>;
-  dataSource: PaymentDataTabelDataSource;
-  // ELEMENT_DATA: PaymentElement[] = [];
+  // @ViewChild(MatTable) table: MatTable<PaymentDataTabelItem>;
+  // dataSource = new MatTableDataSource<PaymentDataTabelItem>();
+  // ELEMENT_DATA: PaymentDataTabelItem[] = [];
 
-  displayedColumns: string[] = ['position', 'payment', 'principle', 'intrest', 'intrestPaid', 'balance'];
-  // dataSource = new MatTableDataSource<PaymentElement>();
+  // displayedColumns: string[] = ['position','month', 'payment', 'principle', 'intrest', 'intrestPaid', 'balance'];
 
   constructor(
     private userFinanceService: UserFinanceService,
@@ -147,62 +141,12 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy {
       });
   } // ngOnInit END
 
-  // enableEdit() {
-  //   this.fieldsetDisabled = false;
+  // ngAfterViewInit() {
+  //   this.dataSource.data = this.ELEMENT_DATA;
+  //   this.dataSource.paginator = this.paginator;
   // }
 
-  private calculate(amount, months, rate, extra) {
-
-
-    const i = rate / 100;
-    this.monthlyPayment = amount * (i / 12) * Math.pow((1 + i / 12), months) / (Math.pow((1 + i / 12), months) - 1);
-    this.totalPayment = this.roundTo(this.monthlyPayment + extra, 2);
-    // let currentBalance = +amount;
-    // let totalIntrest = 0;
-    // let paymentCounter = 1;
-    this.monthlyPayment = this.roundTo(this.monthlyPayment + extra, 2);
-    // while (currentBalance > 0) {
-
-    //   const towardsIntrest = (i / 12) * +currentBalance;
-
-    //   if (this.monthlyPayment > currentBalance) {
-    //     this.monthlyPayment = this.roundTo(currentBalance + towardsIntrest, 2);
-    //   }
-    //   const towardsBalance = +this.monthlyPayment - +towardsIntrest;
-    //   totalIntrest = totalIntrest + towardsIntrest;
-    //   currentBalance = +currentBalance - +towardsBalance;
-
-    //   const paymentElement: PaymentDataTabelItem = {
-    //     position: paymentCounter,
-    //     payment: this.roundTo(this.monthlyPayment, 2),
-    //     principle: this.roundTo(towardsBalance, 2),
-    //     intrest: this.roundTo(towardsIntrest, 2),
-    //     intrestPaid: this.roundTo(totalIntrest, 2),
-    //     balance: this.roundTo(currentBalance, 2)
-    //   };
-
-    //   paymentCounter++;
-    //   this.dataSource.data.push(paymentElement);
-
-
-    // }
-
-  }
-
-  private roundTo(num, digits) {
-    if (digits === undefined) {
-      digits = 0;
-    }
-    const multiplicator = Math.pow(10, digits);
-    num = parseFloat((num * multiplicator).toFixed(11));
-    const test = (Math.round(num) / multiplicator);
-    return +(test.toFixed(digits));
-  }
-
   loadPaymentDetails(event) {
-
-    console.log(event);
-
     if (event.name !== '' && event.name === 'loanAmount') {
       this.loanAmount = parseFloat(event.value);
     }
@@ -216,24 +160,52 @@ export class AddUserDetailsComponent implements OnInit, OnDestroy {
       this.extraPayment = parseFloat(event.value);
     }
     if (this.loanAmount > 0 && this.intrestRate > 0 && this.term > 0) {
-      this.dataSource = new PaymentDataTabelDataSource();
-      this.calculate(this.loanAmount, this.term, this.intrestRate, this.extraPayment);
+      // this.dataSource = new PaymentDataTabelDataSource();
+      this.calculate(this.loanAmount, this.term, this.intrestRate, this.extraPayment, 1);
       // this.displayPaymetDetails = true;
     }
   }
 
+  private calculate(principal, months, rate, extra, yearOrMonth) {
+    let numerator = 0;
+    let denominator = 0;
+    const ratePerPeriod = rate / 100 / 12;
 
+    // if convert years to month
+    if (!yearOrMonth) {
+      numerator = buildNumerator(months * 12);
+      denominator = Math.pow((1 + ratePerPeriod), months * 12) - 1;
+      // for inputs in months
+    } else if (yearOrMonth === 1) {
+      numerator = buildNumerator(months)
+      denominator = Math.pow((1 + ratePerPeriod), months) - 1;
+    } else {
+      console.log(' yearOrMonth not defined');
+    }
+    // build Numerator
+    function buildNumerator(numInterestAccruals) {
+      return ratePerPeriod * Math.pow((1 + ratePerPeriod), numInterestAccruals);
+    }
 
+    if (extra > 0) {
+      this.monthlyPayment = this.roundTo((principal * (numerator / denominator)) + extra, 2);
+    } else {
+      this.monthlyPayment = this.roundTo(principal * (numerator / denominator), 2);
+    }
 
+    this.totalPayment = this.roundTo(this.monthlyPayment + extra, 2);
 
+  }
 
-
-
-
-
-
-
-
+  private roundTo(num, digits) {
+    if (digits === undefined) {
+      digits = 0;
+    }
+    const multiplicator = Math.pow(10, digits);
+    num = parseFloat((num * multiplicator).toFixed(11));
+    const test = (Math.round(num) / multiplicator);
+    return +(test.toFixed(digits));
+  }
 
 
   onImagePicked(event) {
